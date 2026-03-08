@@ -1,7 +1,7 @@
 {
   "name": "middle.messenger.praktikum.yandex",
   "version": "1.0.0",
-  "description": "---",
+  "description": "Мессенджер с возможностью обмена сообщениями",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,6 +11,9 @@
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "echo \"No tests yet\"",
     "prepare": "husky"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "repository": {
     "type": "git",

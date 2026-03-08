@@ -7,7 +7,7 @@ export interface InputValidationRule {
 export function validateInput(
   input: HTMLInputElement,
   rules: InputValidationRule[],
-  fieldName: string
+  fieldName: string,
 ): boolean {
   const value = input.value.trim();
   let isValid = true;
@@ -20,9 +20,9 @@ export function validateInput(
   }
 
   if (!isValid) {
-    input.classList.add('register-form__input--invalid');
+    input.classList.add("register-form__input--invalid");
   } else {
-    input.classList.remove('register-form__input--invalid');
+    input.classList.remove("register-form__input--invalid");
   }
 
   return isValid;

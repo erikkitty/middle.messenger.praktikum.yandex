@@ -9,16 +9,16 @@ function initSettingsLinks() {
   const passwordBtn = document.querySelector('[data-action="edit-password"]');
   const logoutBtn = document.querySelector('[data-action="logout"]');
 
-  editDataBtn?.addEventListener('click', () => {
+  editDataBtn?.addEventListener("click", () => {
     win.showChangeDataView?.();
   });
 
-  passwordBtn?.addEventListener('click', () => {
+  passwordBtn?.addEventListener("click", () => {
     win.showChangePasswordView?.();
   });
 
-  logoutBtn?.addEventListener('click', () => {
-    if (confirm('Вы уверены, что хотите выйти?')) {
+  logoutBtn?.addEventListener("click", () => {
+    if (confirm("Вы уверены, что хотите выйти?")) {
       win.renderAuthForm?.();
     }
   });

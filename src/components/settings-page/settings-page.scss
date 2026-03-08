@@ -1,15 +1,15 @@
-@use './__avatar/settings-page__avatar.scss' as *;
-@use './__user-info/settings-page__user-info.scss' as *;
-@use './__links/settings-page__links.scss' as *;
-@use './__modal/settings-page__modal.scss' as *;
-@use './__change-password/settings-page__change-password.scss' as *;
-@use './__change-data/settings-page__change-data.scss' as *;
+@use "./__avatar/settings-page__avatar.scss" as *;
+@use "./__user-info/settings-page__user-info.scss" as *;
+@use "./__links/settings-page__links.scss" as *;
+@use "./__modal/settings-page__modal.scss" as *;
+@use "./__change-password/settings-page__change-password.scss" as *;
+@use "./__change-data/settings-page__change-data.scss" as *;
 
 .settings-page {
   display: flex;
   height: 100vh;
   width: 100%;
-  font-family: 'YS Text', 'Segoe UI', system-ui, sans-serif;
+  font-family: "YS Text", "Segoe UI", system-ui, sans-serif;
   background: #fff;
 
   &-sidebar {

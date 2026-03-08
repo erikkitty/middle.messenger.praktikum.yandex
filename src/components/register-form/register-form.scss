@@ -1,7 +1,7 @@
-@use '../../assets/scss/variables' as *;
-@use './__input/register-form__input.scss';
-@use './__button/register-form__button.scss';
-@use './__link/register-form__link.scss';
+@use "../../assets/scss/variables" as *;
+@use "./__input/register-form__input.scss";
+@use "./__button/register-form__button.scss";
+@use "./__link/register-form__link.scss";
 
 .register-form {
   background: $color-bg-card;

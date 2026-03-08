@@ -1,13 +1,13 @@
-@use './__header/chat-page__header';
-@use './__sidebar/__search/chat-page__sidebar-search'; 
-@use './__sidebar/__chat-item/chat-page__sidebar-chat-item'; 
-@use './__content/__empty-state/chat-page__content-empty'; 
+@use "./__header/chat-page__header";
+@use "./__sidebar/__search/chat-page__sidebar-search";
+@use "./__sidebar/__chat-item/chat-page__sidebar-chat-item";
+@use "./__content/__empty-state/chat-page__content-empty";
 
 .chat-page {
   display: flex;
   height: 100vh;
   width: 100%;
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
   color: #212121;
   background: #fff;
 

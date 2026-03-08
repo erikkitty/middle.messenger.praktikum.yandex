@@ -1,7 +1,7 @@
-@use './__input/auth-form__input.scss';
-@use './__button/auth-form__button.scss';
-@use './__link/auth-form__link.scss';
-@use '../../assets/scss/variables' as *;
+@use "./__input/auth-form__input.scss";
+@use "./__button/auth-form__button.scss";
+@use "./__link/auth-form__link.scss";
+@use "../../assets/scss/variables" as *;
 
 .auth-form {
   background: $color-bg-card;

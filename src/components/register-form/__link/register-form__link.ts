@@ -1,5 +1,5 @@
 export function setupLinkHandler(link: HTMLAnchorElement, onClick: () => void) {
-  link.addEventListener('click', (e) => {
+  link.addEventListener("click", (e) => {
     e.preventDefault();
     onClick();
   });

@@ -1,4 +1,4 @@
-@use '../../../assets/scss/variables' as *;
+@use "../../../assets/scss/variables" as *;
 
 .register-form__button {
   background: $color-primary;
@@ -18,7 +18,7 @@
   margin-top: 4px;
 
   &:hover:not(:disabled) {
-    background: #6a5acd; 
+    background: #6a5acd;
   }
 
   &:disabled {

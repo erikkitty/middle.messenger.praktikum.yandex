@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.querySelector('[data-action="refresh"]');
 
-  refreshBtn?.addEventListener('click', () => {
+  refreshBtn?.addEventListener("click", () => {
     window.location.reload();
   });
 });

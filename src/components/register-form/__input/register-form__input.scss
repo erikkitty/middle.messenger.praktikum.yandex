@@ -1,8 +1,8 @@
-@use '../../../assets/scss/variables' as *;
+@use "../../../assets/scss/variables" as *;
 
 .register-form__input-wrapper {
   position: relative;
- -bottom: $spacing-md;
+  -bottom: $spacing-md;
 
   .register-form__input-label {
     display: block;

@@ -1,0 +1,42 @@
+@use './variables' as *;
+@use './fonts';
+@use '../../components/auth-form/auth-form.scss' as *;
+@use '../../components/register-form/register-form.scss' as *;
+@use '../../components/chat-page/chat-page.scss' as *;
+@use '../../components/settings-page/settings-page.scss' as *;
+@use '../../components/error-404/error-404' as*; 
+@use '../../components/error-500/error-500' as*;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family-base;
+  line-height: 1.6;
+  background: $color-bg;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-md;
+}
+
+body.layout-chat,
+body.layout-settings {
+  align-items: stretch;
+  padding: 0;
+}
+
+body.layout-chat #app,
+body.layout-settings #app {
+  width: 100%;
+  max-width: none;
+}
+
+#app .app-error {
+  color: #c00;
+  padding: 20px;
+}

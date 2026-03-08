@@ -1,0 +1,87 @@
+@use './__avatar/settings-page__avatar.scss' as *;
+@use './__user-info/settings-page__user-info.scss' as *;
+@use './__links/settings-page__links.scss' as *;
+@use './__modal/settings-page__modal.scss' as *;
+@use './__change-password/settings-page__change-password.scss' as *;
+@use './__change-data/settings-page__change-data.scss' as *;
+
+.settings-page {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  font-family: 'YS Text', 'Segoe UI', system-ui, sans-serif;
+  background: #fff;
+
+  &-sidebar {
+    width: 88px;
+    background: #fff;
+    border-right: 1px solid #e0e0e0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 24px;
+    flex-shrink: 0;
+
+    &__back {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #0066ff;
+      color: #fff;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #0052cc;
+      }
+    }
+  }
+
+  &-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 24px;
+    background: #fff;
+    overflow-y: auto;
+
+    &__profile {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__change-data {
+      width: 100%;
+      display: none;
+    }
+
+    &__change-password {
+      width: 100%;
+      display: none;
+    }
+
+    &--data-view &__profile {
+      display: none;
+    }
+
+    &--data-view &__change-data {
+      display: block;
+    }
+
+    &--password-view &__profile {
+      display: none;
+    }
+
+    &--password-view &__change-password {
+      display: block;
+    }
+  }
+}

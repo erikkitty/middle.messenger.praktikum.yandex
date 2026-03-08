@@ -1,0 +1,34 @@
+{
+  "name": "middle.messenger.praktikum.yandex",
+  "version": "1.0.0",
+  "description": "---",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikkitty/middle.messenger.praktikum.yandex.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erikkitty/middle.messenger.praktikum.yandex/issues"
+  },
+  "homepage": "https://github.com/erikkitty/middle.messenger.praktikum.yandex#readme",
+  "dependencies": {
+    "handlebars": "^4.7.8",
+    "sass": "^1.97.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.3.3",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.56.1",
+    "vite": "^5.2.0"
+  }
+}

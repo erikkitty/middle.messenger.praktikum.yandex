@@ -1,0 +1,13 @@
+<li class="chat-sidebar__item" data-chat-id="{{id}}">
+  <div class="chat-sidebar__item-avatar">
+    <img src="{{avatar}}" alt="{{name}}" />
+  </div>
+  <div class="chat-sidebar__item-info">
+    <div class="chat-sidebar__item-name">{{name}}</div>
+    <div class="chat-sidebar__item-last-message">{{lastMessage}}</div>
+  </div>
+  <div class="chat-sidebar__item-time">{{time}}</div>
+  {{#if unread}}
+    <div class="chat-sidebar__item-unread">{{unread}}</div>
+  {{/if}}
+</li>

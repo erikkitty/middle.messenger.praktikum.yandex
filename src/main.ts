@@ -33,7 +33,7 @@ function setLayout(mode: "auth" | "chat" | "settings") {
   document.body.classList.toggle("layout-settings", mode === "settings");
 }
 
-function renderAuthForm() {
+function renderAuthForm() {       // auth
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -71,7 +71,7 @@ function renderAuthForm() {
   }
 }
 
-function renderRegisterForm() {
+function renderRegisterForm() {          //registration
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -112,7 +112,7 @@ function renderRegisterForm() {
   }
 }
 
-function renderChatPage() {
+function renderChatPage() {         // chats
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -151,7 +151,7 @@ function renderChatPage() {
   }
 }
 
-function renderSettingsPage() {
+function renderSettingsPage() {         // profile and settings
   const app = document.getElementById("app");
   if (!app) return;
 
@@ -204,7 +204,7 @@ function renderSettingsPage() {
   }
 }
 
-function showChangeDataView() {
+function showChangeDataView() {             // Change data
   const slot = document.getElementById("settings-change-data-slot");
   const content = document.getElementById("settings-content");
   if (!slot || !content) return;
@@ -218,7 +218,7 @@ function showChangeDataView() {
     .catch(console.error);
 }
 
-function showChangePasswordView() {
+function showChangePasswordView() {        // Change password
   const slot = document.getElementById("settings-change-password-slot");
   const content = document.getElementById("settings-content");
   if (!slot || !content) return;

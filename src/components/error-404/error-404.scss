@@ -5,7 +5,7 @@
   height: 100vh;
   width: 100%;
   background: #fff;
-  font-family: "YS Text", "Segoe UI", system-ui, sans-serif;
+  font-family: "oswald" sans-serif;
 
   &__content {
     text-align: center;
@@ -45,7 +45,7 @@
     font-weight: 600;
     cursor: pointer;
     transition: background 0.2s;
-    font-family: inherit;
+    font-family: "oswald" sans-serif;
 
     &:hover {
       background: #0052cc;

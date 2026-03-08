@@ -1,11 +1,11 @@
 @use "./variables" as *;
 @use "./fonts";
-@use "../../components/auth-form/auth-form.scss" as *;
-@use "../../components/register-form/register-form.scss" as *;
-@use "../../components/chat-page/chat-page.scss" as *;
-@use "../../components/settings-page/settings-page.scss" as *;
-@use "../../components/error-404/error-404" as *;
-@use "../../components/error-500/error-500" as *;
+@use "../../components/auth-form/auth-form.scss" as *;  // auth
+@use "../../components/register-form/register-form.scss" as *; // regist
+@use "../../components/chat-page/chat-page.scss" as *;  // chats
+@use "../../components/settings-page/settings-page.scss" as *; // profile
+@use "../../components/error-404/error-404" as *;  // 404 page
+@use "../../components/error-500/error-500" as *;  // 500 page
 
 * {
   box-sizing: border-box;
@@ -14,7 +14,7 @@
 }
 
 body {
-  font-family: $font-family-base;
+  font-family: "oswald" sans-serif;
   line-height: 1.6;
   background: $color-bg;
   min-height: 100vh;

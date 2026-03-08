@@ -55,7 +55,7 @@ function renderChatList(container: HTMLElement, activeId: string | null): void {
       .querySelector('[data-action="menu"]')
       ?.addEventListener("click", (e) => {
         e.stopPropagation();
-        showChatMenu(id, item);
+        showChatMenu(id);
       });
 
     item.addEventListener("click", (e) => {
@@ -77,7 +77,7 @@ function attachNewChatButton(): void {
   });
 }
 
-function showChatMenu(chatId: string, _anchor: HTMLElement): void {
+function showChatMenu(chatId: string): void {
   const chat = getChatById(chatId);
   if (!chat) return;
 
@@ -104,7 +104,7 @@ function showChatMenu(chatId: string, _anchor: HTMLElement): void {
       renderChatList(listEl!, activeChatId);
     }
   } else if (action === "3") {
-    let usersList = chat.users.join(", ");
+    const usersList = chat.users.join(", ");
     const act = prompt(
       `Участники: ${usersList}\nДобавить (введите имя) или удалить (введите минус и имя, например -Иван)`,
     );

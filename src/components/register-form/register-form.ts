@@ -55,7 +55,7 @@ function initRegisterForm() {
 
     errors.phone = !getVal(fields.phone)
       ? "Телефон обязателен"
-      : !/^(\+7|8|\+)[\s\-]?\(?[\d\s\-\)]{10,}$/.test(getVal(fields.phone))
+      : !/^(\+7|8|\+)[\s\-]?\(?[\d\s-)]{10,}$/.test(getVal(fields.phone))
         ? "Начните с +7, 8 или +"
         : "";
 

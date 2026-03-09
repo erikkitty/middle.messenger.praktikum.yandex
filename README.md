@@ -1,3 +1,4 @@
+sprint_1
 # Chat Application
 
 Мессенджер с возможностью обмена сообщениями, управления профилем и настройками пользователя.
@@ -25,3 +26,7 @@ npm run build
 
 # Предпросмотр сборки
 npm run preview
+
+## Pull Request
+[Sprint 1](https://github.com/erikkitty/middle.messenger.praktikum.yandex/pull/7)
+main

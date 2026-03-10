@@ -1,0 +1,30 @@
+.settings-user-info {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 48px;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__label {
+    color: #757575;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  &__value {
+    color: #212121;
+    font-size: 14px;
+    text-align: right;
+  }
+}

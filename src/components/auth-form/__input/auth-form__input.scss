@@ -1,0 +1,49 @@
+@use "../../../assets/scss/variables" as *;
+
+.auth-form__input-wrapper {
+  position: relative;
+  margin-bottom: $spacing-md;
+
+  .auth-form__input-label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    font-weight: 500;
+  }
+
+  .auth-form__input {
+    width: 100%;
+    padding: $spacing-sm 0;
+    border: none;
+    border-bottom: 1px solid #c4c4c4;
+    font-size: $font-size-md;
+    background: transparent;
+    font-family: "oswald" sans-serif;
+    outline: none;
+
+    &:focus {
+      border-bottom-color: $color-primary;
+    }
+
+    &--invalid {
+      border-bottom-color: $color-error;
+    }
+  }
+
+  .auth-form__input-error {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    font-size: $font-size-xs;
+    color: $color-error;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &.has-error .auth-form__input-error {
+    visibility: visible;
+    opacity: 1;
+  }
+}

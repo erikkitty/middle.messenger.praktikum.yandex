@@ -1,0 +1,44 @@
+{
+  "name": "middle.messenger.praktikum.yandex",
+  "version": "1.0.0",
+  "description": "Мессенджер с возможностью обмена сообщениями",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "npm run dev",
+    "build": "vite build",
+    "lint": "eslint . --ext ts,tsx",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "test": "echo \"No tests yet\"",
+    "prepare": "husky"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erikkitty/middle.messenger.praktikum.yandex.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erikkitty/middle.messenger.praktikum.yandex/issues"
+  },
+  "homepage": "https://github.com/erikkitty/middle.messenger.praktikum.yandex#readme",
+  "dependencies": {
+    "handlebars": "^4.7.8",
+    "sass": "^1.97.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.3.3",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
+    "husky": "^9.1.7",
+    "jiti": "^2.6.1",
+    "lint-staged": "^16.3.2",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^8.56.1",
+    "vite": "^5.2.0"
+  }
+}

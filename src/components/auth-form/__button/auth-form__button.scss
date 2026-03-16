@@ -1,0 +1,27 @@
+@use "../../../assets/scss/variables" as *;
+
+.auth-form__button {
+  background: $color-primary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-sm;
+  padding: $spacing-sm;
+  font-size: $font-size-md;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background: $color-primary-hover;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

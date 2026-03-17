@@ -1,22 +1,22 @@
-@use "./__input/auth-form__input.scss";
-@use "./__button/auth-form__button.scss";
-@use "./__link/auth-form__link.scss";
+@use "./__input/auth-form__input";
+@use "./__button/auth-form__button";
+@use "./__link/auth-form__link";
 @use "../../assets/scss/variables" as *;
 
 .auth-form {
   background: $color-bg-card;
   border-radius: $border-radius-md;
   box-shadow: $shadow-card;
+  max-width: 360px;
   padding: $spacing-xl;
   width: 100%;
-  max-width: 360px;
 
   &__title {
+    color: $color-text;
     font-size: $font-size-xl;
     font-weight: 600;
-    text-align: center;
     margin-bottom: $spacing-lg;
-    color: $color-text;
+    text-align: center;
   }
 
   &__form {

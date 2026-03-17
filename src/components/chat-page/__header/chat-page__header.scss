@@ -2,11 +2,11 @@
   &__profile-btn {
     background: none;
     border: none;
-    font-size: 14px;
+    border-radius: 4px;
     color: #212121;
     cursor: pointer;
+    font-size: 14px;
     padding: 8px 12px;
-    border-radius: 4px;
     transition: background 0.2s;
 
     &:hover {

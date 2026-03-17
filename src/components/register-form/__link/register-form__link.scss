@@ -1,19 +1,19 @@
 @use "../../../assets/scss/variables" as *;
 
 .register-form__link {
-  display: block;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  border: none;
   background: none;
-  cursor: pointer;
-  font: inherit;
-  text-align: center;
+  border: none;
   color: $color-primary;
-  text-decoration: none;
+  cursor: pointer;
+  display: block;
+  font: inherit;
   font-size: $font-size-sm;
   font-weight: 500;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
 
   &:hover {
     text-decoration: underline;

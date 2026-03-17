@@ -1,14 +1,14 @@
 .settings-user-info {
-  width: 100%;
-  max-width: 400px;
   margin: 0 auto 48px;
+  max-width: 400px;
+  width: 100%;
 
   &__row {
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #e0e0e0;
 
     &:last-child {
       border-bottom: none;
@@ -17,8 +17,8 @@
 
   &__label {
     color: #757575;
-    font-size: 14px;
     flex-shrink: 0;
+    font-size: 14px;
     margin-right: 16px;
   }
 

@@ -1,19 +1,19 @@
 .settings-change-data {
-  width: 100%;
-  max-width: 400px;
   margin: 0 auto;
+  max-width: 400px;
+  width: 100%;
 
   &__back {
-    display: inline-flex;
     align-items: center;
-    margin-bottom: 24px;
-    padding: 8px 0;
     background: none;
     border: none;
-    font-size: 14px;
-    color: #0066ff;
+    color: #06f;
     cursor: pointer;
+    display: inline-flex;
     font-family: "oswald" sans-serif;
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding: 8px 0;
 
     &:hover {
       text-decoration: underline;
@@ -26,11 +26,11 @@
   }
 
   &__row {
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #e0e0e0;
 
     &:last-child {
       border-bottom: none;
@@ -39,44 +39,44 @@
 
   &__label {
     color: #757575;
-    font-size: 14px;
     flex-shrink: 0;
+    font-size: 14px;
     margin-right: 16px;
   }
 
   &__input {
-    flex: 1;
-    max-width: 240px;
-    padding: 8px 12px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 14px;
+    flex: 1;
     font-family: "oswald" sans-serif;
+    font-size: 14px;
+    max-width: 240px;
+    padding: 8px 12px;
 
     &:focus {
+      border-color: #06f;
       outline: none;
-      border-color: #0066ff;
     }
   }
 
   &__actions {
+    border-top: 1px solid #e0e0e0;
     display: flex;
     gap: 12px;
     margin-top: 24px;
     padding-top: 16px;
-    border-top: 1px solid #e0e0e0;
   }
 
   &__submit {
-    padding: 12px 24px;
-    background: #0066ff;
-    color: #fff;
+    background: #06f;
     border: none;
     border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
+    color: #fff;
     cursor: pointer;
     font-family: "oswald" sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 24px;
 
     &:hover {
       background: #0052cc;
@@ -84,14 +84,14 @@
   }
 
   &__cancel {
-    padding: 12px 24px;
     background: transparent;
-    color: #757575;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 14px;
+    color: #757575;
     cursor: pointer;
     font-family: "oswald" sans-serif;
+    font-size: 14px;
+    padding: 12px 24px;
 
     &:hover {
       background: #f5f5f5;

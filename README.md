@@ -35,3 +35,6 @@ npm run build
 
 # Предпросмотр сборки
 npm run preview
+
+# Pull Request
+https://github.com/erikkitty/middle.messenger.praktikum.yandex/pull/8

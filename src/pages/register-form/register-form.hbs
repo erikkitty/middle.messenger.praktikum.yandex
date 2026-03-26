@@ -1,0 +1,17 @@
+<main class="register-form">
+  <h2 class="register-form__title">Регистрация</h2>
+  <form class="register-form__form" novalidate>
+    {{{firstNameInput}}}
+    {{{secondNameInput}}}
+    {{{loginInput}}}
+    {{{emailInput}}}
+    {{{phoneInput}}}
+    {{{passwordInput}}}
+    {{{confirmPasswordInput}}}
+    {{{submitButton}}}
+    {{{loginButton}}}
+    {{#if error}}
+      <div class="register-form__error">{{error}}</div>
+    {{/if}}
+  </form>
+</main>

@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "npm run dev",
+    "start": "npm run build && vite preview",
     "build": "tsc --noEmit && vite build",
-    "lint": "eslint . && stylelint \"src/**/*.scss\"",
+    "lint": "eslint . && stylelint \"src/**/*.scss\" && npm run typecheck",
     "lint:fix": "eslint . --fix && stylelint \"src/**/*.scss\" --fix",
     "lint:js": "eslint .",
     "lint:css": "stylelint \"src/**/*.scss\"",

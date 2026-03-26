@@ -1,0 +1,29 @@
+<main class="chat-page">
+  <aside class="chat-sidebar">
+    {{> chat-page/__header/chat-page__header }}
+    {{> chat-page/__sidebar/__search/chat-page__sidebar-search }}
+
+    <button type="button" class="chat-sidebar__new-chat" data-action="new-chat">+ Новый чат</button>
+    <ul class="chat-sidebar__list">
+      {{#each chats}}
+        {{> chat-page/__sidebar/__chat-item/chat-page__sidebar-chat-item }}
+      {{/each}}
+    </ul>
+  </aside>
+
+  <main class="chat-main">
+    <div class="chat-content">
+      {{#if currentChatId}}
+        <div class="chat-messages">
+          {{{messageComponents}}}
+        </div>
+        <form class="chat-send" data-action="send-message">
+          <input class="chat-send__input" name="message" placeholder="Сообщение" />
+          <button class="chat-send__submit" type="submit">Отправить</button>
+        </form>
+      {{else}}
+        {{> chat-page/__content/__empty-state/chat-page__content-empty }}
+      {{/if}}
+    </div>
+  </main>
+</main>

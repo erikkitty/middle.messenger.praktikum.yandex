@@ -1,0 +1,52 @@
+.error-page {
+  align-items: center;
+  background: #fff;
+  display: flex;
+  font-family: "oswald", sans-serif;
+  height: 100vh;
+  justify-content: center;
+  width: 100%;
+
+  &__content {
+    padding: 24px;
+    text-align: center;
+  }
+
+  &__code {
+    color: #6a5acd;
+    font-size: 128px;
+    font-weight: 700;
+    line-height: 1;
+    margin: 0 0 24px;
+  }
+
+  &__title {
+    color: #000;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+
+  &__description {
+    color: #999;
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 32px;
+  }
+
+  &__button {
+    background: #8a7bd1;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-family: "oswald", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px 48px;
+
+    &:hover {
+      background: #6a5acd;
+    }
+  }
+}

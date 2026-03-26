@@ -1,250 +1,141 @@
 import "./assets/scss/main.scss";
 import Handlebars from "handlebars";
+import { router } from "./core/Router";
+import { authController } from "./controllers/auth.controller";
+import { registerController } from "./controllers/register.controller";
+import { chatController } from "./controllers/chat.controller";
+import { settingsController } from "./controllers/settings.controller";
+import { error404Controller } from "./controllers/error-404.controller";
+import { error500Controller } from "./controllers/error-500.controller";
 
-import authFormHbs from "./components/auth-form/auth-form.hbs?raw";
-import regFormHbs from "./components/register-form/register-form.hbs?raw";
-import chatPageHbs from "./components/chat-page/chat-page.hbs?raw";
+import chatHeaderHbs from "./pages/chat-page/__header/chat-page__header.hbs?raw";
+import chatSidebarSearchHbs from "./pages/chat-page/__sidebar/__search/chat-page__sidebar-search.hbs?raw";
+import chatSidebarItemHbs from "./pages/chat-page/__sidebar/__chat-item/chat-page__sidebar-chat-item.hbs?raw";
+import chatContentEmptyHbs from "./pages/chat-page/__content/__empty-state/chat-page__content-empty.hbs?raw";
 
-import authInputHbs from "./components/auth-form/__input/auth-form__input.hbs?raw";
-import authButtonHbs from "./components/auth-form/__button/auth-form__button.hbs?raw";
-import authLinkHbs from "./components/auth-form/__link/auth-form__link.hbs?raw";
+import settingsPageAvatarHbs from "./pages/settings-page/__avatar/settings-page__avatar.hbs?raw";
+import settingsPageUserInfoHbs from "./pages/settings-page/__user-info/settings-page__user-info.hbs?raw";
+import settingsPageLinksHbs from "./pages/settings-page/__links/settings-page__links.hbs?raw";
+import settingsPageModalHbs from "./pages/settings-page/__modal/settings-page__modal.hbs?raw";
+import settingsChangePasswordHbs from "./pages/settings-page/__change-password/settings-page__change-password.hbs?raw";
+import settingsChangeDataHbs from "./pages/settings-page/__change-data/settings-page__change-data.hbs?raw";
 
-import regInputHbs from "./components/register-form/__input/register-form__input.hbs?raw";
-import regButtonHbs from "./components/register-form/__button/register-form__button.hbs?raw";
-import regLinkHbs from "./components/register-form/__link/register-form__link.hbs?raw";
-
-import chatHeaderHbs from "./components/chat-page/__header/chat-page__header.hbs?raw";
-import chatSidebarSearchHbs from "./components/chat-page/__sidebar/__search/chat-page__sidebar-search.hbs?raw";
-import chatSidebarItemHbs from "./components/chat-page/__sidebar/__chat-item/chat-page__sidebar-chat-item.hbs?raw";
-import chatContentEmptyHbs from "./components/chat-page/__content/__empty-state/chat-page__content-empty.hbs?raw";
-
-import settingsPageHbs from "./components/settings-page/settings-page.hbs?raw";
-import settingsAvatarHbs from "./components/settings-page/__avatar/settings-page__avatar.hbs?raw";
-import settingsUserInfoHbs from "./components/settings-page/__user-info/settings-page__user-info.hbs?raw";
-import settingsLinksHbs from "./components/settings-page/__links/settings-page__links.hbs?raw";
-import settingsModalHbs from "./components/settings-page/__modal/settings-page__modal.hbs?raw";
-import settingsChangePasswordHbs from "./components/settings-page/__change-password/settings-page__change-password.hbs?raw";
-import settingsChangeDataHbs from "./components/settings-page/__change-data/settings-page__change-data.hbs?raw";
-
-import { mockUser } from "./components/settings-page/mock-user";
-
-function setLayout(mode: "auth" | "chat" | "settings") {
+function setLayout(mode: "auth" | "chat" | "settings" | "error") {
   document.body.classList.toggle("layout-chat", mode === "chat");
   document.body.classList.toggle("layout-settings", mode === "settings");
+  document.body.classList.toggle("layout-error", mode === "error");
 }
 
-function renderAuthForm() {       // auth
+function showFatalError(error: unknown): void {
   const app = document.getElementById("app");
   if (!app) return;
-
-  try {
-    setLayout("auth");
-
-    Handlebars.registerPartial(
-      "auth-form/__input/auth-form__input",
-      authInputHbs,
-    );
-    Handlebars.registerPartial(
-      "auth-form/__button/auth-form__button",
-      authButtonHbs,
-    );
-    Handlebars.registerPartial("auth-form/__link/auth-form__link", authLinkHbs);
-
-    const template = Handlebars.compile(authFormHbs);
-    app.innerHTML = template({});
-
-    import("./components/auth-form/auth-form.ts")
-      .then(() => {
-        const regLink = app.querySelector(".auth-form__link--register");
-        regLink?.addEventListener("click", (e) => {
-          e.preventDefault();
-          renderRegisterForm();
-        });
-      })
-      .catch(console.error);
-  } catch (e) {
-    const errDiv = document.createElement("div");
-    errDiv.className = "app-error";
-    errDiv.textContent = `Ошибка: ${(e as Error).message}`;
-    app.innerHTML = "";
-    app.appendChild(errDiv);
-  }
+  const message = error instanceof Error ? error.message : String(error);
+  const errorEl = document.createElement("div");
+  errorEl.className = "app-error";
+  errorEl.textContent = `Ошибка: ${message}`;
+  app.innerHTML = "";
+  app.appendChild(errorEl);
 }
 
-function renderRegisterForm() {          //registration
+function registerPartials(): void {
+  Handlebars.registerPartial(
+    "chat-page/__header/chat-page__header",
+    chatHeaderHbs,
+  );
+  Handlebars.registerPartial(
+    "chat-page/__sidebar/__search/chat-page__sidebar-search",
+    chatSidebarSearchHbs,
+  );
+  Handlebars.registerPartial(
+    "chat-page/__sidebar/__chat-item/chat-page__sidebar-chat-item",
+    chatSidebarItemHbs,
+  );
+  Handlebars.registerPartial(
+    "chat-page/__content/__empty-state/chat-page__content-empty",
+    chatContentEmptyHbs,
+  );
+
+  Handlebars.registerPartial(
+    "settings-page/__avatar/settings-page__avatar",
+    settingsPageAvatarHbs,
+  );
+  Handlebars.registerPartial(
+    "settings-page/__user-info/settings-page__user-info",
+    settingsPageUserInfoHbs,
+  );
+  Handlebars.registerPartial(
+    "settings-page/__links/settings-page__links",
+    settingsPageLinksHbs,
+  );
+  Handlebars.registerPartial(
+    "settings-page/__modal/settings-page__modal",
+    settingsPageModalHbs,
+  );
+  Handlebars.registerPartial(
+    "settings-page/__change-password/settings-page__change-password",
+    settingsChangePasswordHbs,
+  );
+  Handlebars.registerPartial(
+    "settings-page/__change-data/settings-page__change-data",
+    settingsChangeDataHbs,
+  );
+}
+
+function mount(block: { mount: (root: HTMLElement) => void }): void {
   const app = document.getElementById("app");
   if (!app) return;
-
-  try {
-    setLayout("auth");
-
-    Handlebars.registerPartial(
-      "register-form/__input/register-form__input",
-      regInputHbs,
-    );
-    Handlebars.registerPartial(
-      "register-form/__button/register-form__button",
-      regButtonHbs,
-    );
-    Handlebars.registerPartial(
-      "register-form/__link/register-form__link",
-      regLinkHbs,
-    );
-
-    const template = Handlebars.compile(regFormHbs);
-    app.innerHTML = template({});
-
-    import("./components/register-form/register-form.ts")
-      .then(() => {
-        const loginLink = app.querySelector(".register-form__link--login");
-        loginLink?.addEventListener("click", (e) => {
-          e.preventDefault();
-          renderAuthForm();
-        });
-      })
-      .catch(console.error);
-  } catch (e) {
-    const errDiv = document.createElement("div");
-    errDiv.className = "app-error";
-    errDiv.textContent = `Ошибка: ${(e as Error).message}`;
-    app.innerHTML = "";
-    app.appendChild(errDiv);
-  }
+  block.mount(app);
 }
 
-function renderChatPage() {         // chats
-  const app = document.getElementById("app");
-  if (!app) return;
+window.addEventListener("error", (e) => showFatalError(e.error ?? e.message));
+window.addEventListener("unhandledrejection", (e) =>
+  showFatalError((e as PromiseRejectionEvent).reason),
+);
 
-  try {
-    setLayout("chat");
+registerPartials();
 
-    Handlebars.registerPartial(
-      "chat-page/__header/chat-page__header",
-      chatHeaderHbs,
-    );
-    Handlebars.registerPartial(
-      "chat-page/__sidebar/__search/chat-page__sidebar-search",
-      chatSidebarSearchHbs,
-    );
-    Handlebars.registerPartial(
-      "chat-page/__sidebar/__chat-item/chat-page__sidebar-chat-item",
-      chatSidebarItemHbs,
-    );
-    Handlebars.registerPartial(
-      "chat-page/__content/__empty-state/chat-page__content-empty",
-      chatContentEmptyHbs,
-    );
+router.addRoute("/", () => {
+  setLayout("auth");
+  mount(authController.getView());
+});
 
-    const template = Handlebars.compile(chatPageHbs);
-    app.innerHTML = template({});
+router.addRoute("/register", () => {
+  setLayout("auth");
+  mount(registerController.getView());
+});
 
-    import("./components/chat-page/chat-page.ts")
-      .then((m) => m.initChatPage?.())
-      .catch(console.error);
-  } catch (e) {
-    const errDiv = document.createElement("div");
-    errDiv.className = "app-error";
-    errDiv.textContent = `Ошибка: ${(e as Error).message}`;
-    app.innerHTML = "";
-    app.appendChild(errDiv);
-  }
-}
-
-function renderSettingsPage() {         // profile and settings
-  const app = document.getElementById("app");
-  if (!app) return;
-
-  try {
-    setLayout("settings");
-
-    Handlebars.registerPartial(
-      "settings-page/__avatar/settings-page__avatar",
-      settingsAvatarHbs,
-    );
-    Handlebars.registerPartial(
-      "settings-page/__user-info/settings-page__user-info",
-      settingsUserInfoHbs,
-    );
-    Handlebars.registerPartial(
-      "settings-page/__links/settings-page__links",
-      settingsLinksHbs,
-    );
-    Handlebars.registerPartial(
-      "settings-page/__modal/settings-page__modal",
-      settingsModalHbs,
-    );
-    Handlebars.registerPartial(
-      "settings-page/__change-password/settings-page__change-password",
-      settingsChangePasswordHbs,
-    );
-    Handlebars.registerPartial(
-      "settings-page/__change-data/settings-page__change-data",
-      settingsChangeDataHbs,
-    );
-
-    const template = Handlebars.compile(settingsPageHbs);
-    app.innerHTML = template({
-      avatar: mockUser.avatar,
-      display_name: mockUser.display_name,
-      email: mockUser.email,
-      login: mockUser.login,
-      first_name: mockUser.first_name,
-      second_name: mockUser.second_name,
-      phone: mockUser.phone,
-    });
-
-    import("./components/settings-page/settings-page.ts").catch(console.error);
-  } catch (e) {
-    const errDiv = document.createElement("div");
-    errDiv.className = "app-error";
-    errDiv.textContent = `Ошибка: ${(e as Error).message}`;
-    app.innerHTML = "";
-    app.appendChild(errDiv);
-  }
-}
-
-function showChangeDataView() {             // Change data
-  const slot = document.getElementById("settings-change-data-slot");
-  const content = document.getElementById("settings-content");
-  if (!slot || !content) return;
-  const template = Handlebars.compile(settingsChangeDataHbs);
-  slot.innerHTML = template({});
-  content.classList.add("settings-content--data-view");
-  import("./components/settings-page/__change-data/settings-page__change-data.ts")
-    .then((m) => {
-      m.initChangeData();
-    })
+router.addRoute("/chat", () => {
+  setLayout("chat");
+  chatController
+    .init()
+    .then(() => mount(chatController.getView()))
     .catch(console.error);
-}
+});
 
-function showChangePasswordView() {        // Change password
-  const slot = document.getElementById("settings-change-password-slot");
-  const content = document.getElementById("settings-content");
-  if (!slot || !content) return;
-  const template = Handlebars.compile(settingsChangePasswordHbs);
-  slot.innerHTML = template({});
-  content.classList.add("settings-content--password-view");
-  import("./components/settings-page/__change-password/settings-page__change-password.ts")
-    .then((m) => {
-      m.initChangePassword();
-    })
+router.addRoute("/settings", () => {
+  setLayout("settings");
+  settingsController
+    .init()
+    .then(() => mount(settingsController.getView()))
     .catch(console.error);
-}
+});
 
-const win = window as Window & {
-  renderChatPage?: () => void;
-  renderSettingsPage?: () => void;
-  renderAuthForm?: () => void;
-  showChangeDataView?: () => void;
-  showChangePasswordView?: () => void;
-};
-win.renderChatPage = renderChatPage;
-win.renderSettingsPage = renderSettingsPage;
-win.renderAuthForm = renderAuthForm;
-win.showChangeDataView = showChangeDataView;
-win.showChangePasswordView = showChangePasswordView;
+router.addRoute("/404", () => {
+  setLayout("error");
+  mount(error404Controller.getView());
+});
+
+router.addRoute("/500", () => {
+  setLayout("error");
+  mount(error500Controller.getView());
+});
+
+router.addRoute("*", () => {
+  setLayout("error");
+  mount(error404Controller.getView());
+});
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderAuthForm();
+  if (!window.location.hash) window.location.hash = "/";
+  router.start();
 });

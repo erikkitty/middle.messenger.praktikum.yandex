@@ -1,0 +1,27 @@
+@use "../../../assets/scss/variables" as *;
+
+.register-form__button {
+  align-items: center;
+  background: $color-primary;
+  border: none;
+  border-radius: $border-radius-sm;
+  color: white;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: $font-size-md;
+  font-weight: 600;
+  justify-content: center;
+  margin-top: 4px;
+  padding: $spacing-sm;
+  text-transform: uppercase;
+  width: 100%;
+
+  &:hover:not(:disabled) {
+    background: #6a5acd;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}

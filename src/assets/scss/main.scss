@@ -1,11 +1,11 @@
 @use "./variables" as *;
 @use "./fonts";
-@use "../../components/auth-form/auth-form.scss" as *;  /* auth */
-@use "../../components/register-form/register-form.scss" as *; /* regist */
-@use "../../components/chat-page/chat-page.scss" as *;  /* chats */
-@use "../../components/settings-page/settings-page.scss" as *; /* profile */
-@use "../../components/error-404/error-404" as *;  /* 404 page */
-@use "../../components/error-500/error-500" as *;  /* 500 page */
+@use "../../pages/auth-form/auth-form.scss" as *;  /* auth */
+@use "../../pages/register-form/register-form.scss" as *; /* register */
+@use "../../pages/chat-page/chat-page.scss" as *;  /* chats */
+@use "../../pages/settings-page/settings-page.scss" as *; /* profile */
+@use "../../pages/error-404/error-404" as *;  /* 404 page */
+@use "../../pages/error-500/error-500" as *;  /* 500 page */
 
 * {
   box-sizing: border-box;
@@ -17,7 +17,7 @@ body {
   align-items: center;
   background: $color-bg;
   display: flex;
-  font-family: "Oswald" sans-serif;
+  font-family: "Oswald", sans-serif;
   justify-content: center;
   line-height: 1.6;
   min-height: 100vh;
@@ -25,13 +25,15 @@ body {
 }
 
 body.layout-chat,
-body.layout-settings {
+body.layout-settings,
+body.layout-error {
   align-items: stretch;
   padding: 0;
 }
 
 body.layout-chat #app,
-body.layout-settings #app {
+body.layout-settings #app,
+body.layout-error #app {
   max-width: none;
   width: 100%;
 }

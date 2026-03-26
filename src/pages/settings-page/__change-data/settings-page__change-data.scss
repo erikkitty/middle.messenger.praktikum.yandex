@@ -1,0 +1,108 @@
+.settings-change-data {
+  margin: 0 auto;
+  max-width: 400px;
+  width: 100%;
+
+  &__back {
+    align-items: center;
+    background: none;
+    border: none;
+    color: #8A7BD1;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "oswald", sans-serif;
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding: 8px 0;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &.has-error .settings-change-data__input {
+      border-color: #FF0000;
+    }
+  }
+
+  &__label {
+    color: #000000;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  &__input {
+    border: 1px solid #EFEFEF;
+    border-radius: 8px;
+    font-family: "oswald", sans-serif;
+    font-size: 14px;
+    padding: 12px 16px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+
+    &:focus {
+      border-color: #8A7BD1;
+    }
+
+    &::placeholder {
+      color: #999999;
+    }
+  }
+
+  &__error {
+    color: #FF0000;
+    font-size: 12px;
+    min-height: 16px;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  &__submit {
+    background: #8A7BD1;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-family: "oswald", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 14px;
+    width: 100%;
+
+    &:hover {
+      background: #6F5FB8;
+    }
+  }
+
+  &__cancel {
+    background: transparent;
+    border: none;
+    color: #999999;
+    cursor: pointer;
+    font-family: "oswald", sans-serif;
+    font-size: 14px;
+    padding: 12px;
+    text-align: center;
+
+    &:hover {
+      color: #000000;
+    }
+  }
+}

@@ -1,0 +1,34 @@
+.settings-user-info {
+  margin: 0 auto 48px;
+  max-width: 400px;
+  width: 100%;
+  font-weight: 400;
+
+  &__row {
+    align-items: flex-start;
+    border-bottom: 1px solid #EFEFEF;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__label {
+    color: #999999;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__value {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    width: 100%;
+  }
+}

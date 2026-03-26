@@ -1,6 +1,7 @@
 import template from "./error-404.hbs?raw";
 import "./error-404.scss";
 import { Block } from "../../core/Block";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface Error404Props {
   onBack?: () => void;
@@ -8,7 +9,7 @@ export interface Error404Props {
 
 export class Error404 extends Block<Error404Props> {
   protected render(): void {
-    this.element = this.compile(template, this.props as unknown as Record<string, unknown>);
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 
   protected componentDidMount(): void {

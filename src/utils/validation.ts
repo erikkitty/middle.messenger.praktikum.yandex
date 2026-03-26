@@ -2,10 +2,10 @@ export type ValidationResult = { ok: true } | { ok: false; message: string };
 
 const patterns = {
   login: /^(?=.*[a-zA-Z])[a-zA-Z0-9_-]{3,20}$/,
-  password: /^(?=.*[A-ZА-Я])(?=.*\d).{8,40}$/,
+  password: /^(?=.*[A-ZА-ЯЁ])(?=.*\d).{8,40}$/,
   email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*[a-zA-Z][a-zA-Z0-9.-]*\.[a-zA-Z]{2,}$/,
   phone: /^(\+7|8|\+)?[\d\s()-]{10,15}$/,
-  name: /^[A-ZА-Я][a-zA-Zа-яА-Я-]*$/,
+  name: /^[A-ZА-ЯЁ][a-zA-Zа-яёА-ЯЁ-]*$/,
   message: /^(?!\s*$).+/,
 } as const;
 

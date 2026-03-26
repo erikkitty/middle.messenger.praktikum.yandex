@@ -1,6 +1,7 @@
 import template from "./error-500.hbs?raw";
 import "./error-500.scss";
 import { Block } from "../../core/Block";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface Error500Props {
   onRefresh?: () => void;
@@ -8,7 +9,7 @@ export interface Error500Props {
 
 export class Error500 extends Block<Error500Props> {
   protected render(): void {
-    this.element = this.compile(template, this.props as unknown as Record<string, unknown>);
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 
   protected componentDidMount(): void {

@@ -9,6 +9,7 @@ import {
   setFieldError,
   validateField,
 } from "../../utils/validation";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface RegisterFormProps {
   onSubmit?: (data: {
@@ -37,6 +38,10 @@ type RegisterFormViewProps = RegisterFormProps & {
 };
 
 export class RegisterForm extends Block<RegisterFormViewProps> {
+  private _blurHandlers: (() => void)[] = [];
+  private _submitHandler: ((e: Event) => void) | null = null;
+  private _loginHandler: (() => void) | null = null;
+
   constructor(props: RegisterFormProps) {
     super({
       ...props,
@@ -122,21 +127,16 @@ export class RegisterForm extends Block<RegisterFormViewProps> {
   }
 
   protected render(): void {
-    this.element = this.compile(
-      template,
-      this.props as unknown as Record<string, unknown>,
-    );
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 
   protected componentDidMount(): void {
-    const form = this.element?.querySelector(
-      ".register-form__form",
-    ) as HTMLFormElement | null;
+    const form = this.element?.querySelector<HTMLFormElement>(".register-form__form");
     if (!form) return;
 
     const inputs = Array.from(
-      form.querySelectorAll("input[name]"),
-    ) as HTMLInputElement[];
+      form.querySelectorAll<HTMLInputElement>("input[name]"),
+    );
 
     const validateOne = (input: HTMLInputElement): boolean => {
       const all = collectStringValues(form);
@@ -151,27 +151,71 @@ export class RegisterForm extends Block<RegisterFormViewProps> {
       return r.ok;
     };
 
-    inputs.forEach((input) => {
-      input.addEventListener("blur", () => validateOne(input));
+    this._blurHandlers = inputs.map((input) => {
+      const handler = () => validateOne(input);
+      input.addEventListener("blur", handler);
+      return handler;
     });
 
-    form.addEventListener("submit", (e: SubmitEvent) => {
+    this._submitHandler = (e: Event) => {
       e.preventDefault();
       const ok = inputs.every((i) => validateOne(i));
+
+      if (!ok) return;
+
       const data = formDataToObject(form);
       console.log("register submit", data);
-      if (!ok) return;
-      const payload = data as unknown as Parameters<NonNullable<RegisterFormViewProps["onSubmit"]>>[0];
+
+      const payload = {
+        first_name: data.first_name,
+        second_name: data.second_name,
+        login: data.login,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+        confirm_password: data.confirm_password,
+      };
       this.props.onSubmit?.(payload);
-    });
+    };
+
+    form.addEventListener("submit", this._submitHandler);
+
+    this._loginHandler = () => {
+      this.props.onLogin?.();
+    };
 
     const loginBtn = this.element?.querySelector(
       ".register-form__link--login",
     ) as HTMLButtonElement | null;
-    loginBtn?.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.props.onLogin?.();
+    loginBtn?.addEventListener("click", this._loginHandler);
+  }
+
+  protected componentWillUnmount(): void {
+    const form = this.element?.querySelector<HTMLFormElement>(".register-form__form");
+    if (!form) return;
+
+    const inputs = Array.from(
+      form.querySelectorAll<HTMLInputElement>("input[name]"),
+    );
+
+    inputs.forEach((input, index) => {
+      if (this._blurHandlers[index]) {
+        input.removeEventListener("blur", this._blurHandlers[index]);
+      }
     });
+
+    if (this._submitHandler) {
+      form.removeEventListener("submit", this._submitHandler);
+    }
+
+    const loginBtn = this.element?.querySelector(".register-form__link--login");
+    if (loginBtn && this._loginHandler) {
+      loginBtn.removeEventListener("click", this._loginHandler);
+    }
+
+    this._blurHandlers = [];
+    this._submitHandler = null;
+    this._loginHandler = null;
   }
 
   protected componentDidUpdate(oldProps: RegisterFormViewProps, newProps: RegisterFormViewProps): void {
@@ -180,7 +224,7 @@ export class RegisterForm extends Block<RegisterFormViewProps> {
     if (!this.element) return;
     if (!newProps.error || newProps.error === oldProps.error) return;
 
-    const form = this.element.querySelector(".register-form__form") as HTMLFormElement | null;
+    const form = this.element.querySelector<HTMLFormElement>(".register-form__form");
     if (!form) return;
 
     const inputs = form.querySelectorAll<HTMLInputElement>(".register-form__input");

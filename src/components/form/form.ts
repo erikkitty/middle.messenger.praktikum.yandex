@@ -1,6 +1,7 @@
 import template from "./form.hbs?raw";
 import "./form.scss";
 import { Block } from "../../core/Block";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface FormProps {
   title?: string;
@@ -9,6 +10,6 @@ export interface FormProps {
 
 export class Form extends Block<FormProps> {
   protected render(): void {
-    this.element = this.compile(template, this.props as unknown as Record<string, unknown>);
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 }

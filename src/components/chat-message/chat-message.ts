@@ -1,6 +1,7 @@
 import template from "./chat-message.hbs?raw";
 import "./chat-message.scss";
 import { Block } from "../../core/Block";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface ChatMessageProps {
   text: string;
@@ -10,6 +11,6 @@ export interface ChatMessageProps {
 
 export class ChatMessage extends Block<ChatMessageProps> {
   protected render(): void {
-    this.element = this.compile(template, this.props as unknown as Record<string, unknown>);
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 }

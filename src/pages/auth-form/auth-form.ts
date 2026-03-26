@@ -9,6 +9,7 @@ import {
   setFieldError,
   validateField,
 } from "../../utils/validation";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface AuthFormProps {
   onSubmit?: (data: { login: string; password: string }) => void;
@@ -24,6 +25,10 @@ type AuthFormViewProps = AuthFormProps & {
 };
 
 export class AuthForm extends Block<AuthFormViewProps> {
+  private _blurHandlers: (() => void)[] = [];
+  private _submitHandler: ((e: Event) => void) | null = null;
+  private _registerHandler: (() => void) | null = null;
+
   constructor(props: AuthFormProps) {
     super({
       ...props,
@@ -63,24 +68,15 @@ export class AuthForm extends Block<AuthFormViewProps> {
   }
 
   protected render(): void {
-    this.element = this.compile(
-      template,
-      this.props as unknown as Record<string, unknown>,
-    );
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 
   protected componentDidMount(): void {
-    const form = this.element?.querySelector(
-      ".auth-form__form",
-    ) as HTMLFormElement | null;
+    const form = this.element?.querySelector<HTMLFormElement>(".auth-form__form");
     if (!form) return;
 
-    const loginInput = form.querySelector('input[name="login"]') as
-      | HTMLInputElement
-      | null;
-    const passwordInput = form.querySelector('input[name="password"]') as
-      | HTMLInputElement
-      | null;
+    const loginInput = form.querySelector<HTMLInputElement>('input[name="login"]');
+    const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
     if (!loginInput || !passwordInput) return;
 
     const validateOne = (input: HTMLInputElement): boolean => {
@@ -96,32 +92,69 @@ export class AuthForm extends Block<AuthFormViewProps> {
       return r.ok;
     };
 
-    [loginInput, passwordInput].forEach((input) => {
-      input.addEventListener("blur", () => validateOne(input));
-    });
+    this._blurHandlers = [
+      () => validateOne(loginInput),
+      () => validateOne(passwordInput),
+    ];
 
-    form.addEventListener("submit", (e) => {
+    loginInput.addEventListener("blur", this._blurHandlers[0]);
+    passwordInput.addEventListener("blur", this._blurHandlers[1]);
+
+    this._submitHandler = (e: Event) => {
       e.preventDefault();
 
       const ok = [loginInput, passwordInput].every((i) => validateOne(i));
+
+      if (!ok) return;
+
       const data = formDataToObject(form);
       console.log("auth submit", data);
 
-      if (!ok) return;
       this.props.onSubmit?.({
         login: String(data.login ?? ""),
         password: String(data.password ?? ""),
       });
-    });
+    };
+
+    form.addEventListener("submit", this._submitHandler);
+
+    this._registerHandler = () => {
+      this.props.onRegister?.();
+    };
 
     const registerButton = this.element?.querySelector(
       ".auth-form__link--register",
     ) as HTMLButtonElement | null;
 
-    registerButton?.addEventListener("click", (e) => {
-      e.preventDefault();
-      this.props.onRegister?.();
-    });
+    registerButton?.addEventListener("click", this._registerHandler);
+  }
+
+  protected componentWillUnmount(): void {
+    const form = this.element?.querySelector<HTMLFormElement>(".auth-form__form");
+    if (!form) return;
+
+    const loginInput = form.querySelector<HTMLInputElement>('input[name="login"]');
+    const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
+
+    if (loginInput && this._blurHandlers[0]) {
+      loginInput.removeEventListener("blur", this._blurHandlers[0]);
+    }
+    if (passwordInput && this._blurHandlers[1]) {
+      passwordInput.removeEventListener("blur", this._blurHandlers[1]);
+    }
+
+    if (this._submitHandler) {
+      form.removeEventListener("submit", this._submitHandler);
+    }
+
+    const registerButton = this.element?.querySelector(".auth-form__link--register");
+    if (registerButton && this._registerHandler) {
+      registerButton.removeEventListener("click", this._registerHandler);
+    }
+
+    this._blurHandlers = [];
+    this._submitHandler = null;
+    this._registerHandler = null;
   }
 
   protected componentDidUpdate(oldProps: AuthFormViewProps, newProps: AuthFormViewProps): void {
@@ -130,7 +163,7 @@ export class AuthForm extends Block<AuthFormViewProps> {
     if (!this.element) return;
     if (!newProps.error || newProps.error === oldProps.error) return;
 
-    const form = this.element.querySelector(".auth-form__form") as HTMLFormElement | null;
+    const form = this.element.querySelector<HTMLFormElement>(".auth-form__form");
     if (!form) return;
 
     const inputs = form.querySelectorAll<HTMLInputElement>(".auth-form__input");

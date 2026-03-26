@@ -133,11 +133,23 @@ export class Block<P extends IBlockProps = object> {
   protected componentDidUpdate(_oldProps: P, _newProps: P): void {
     void _oldProps;
     void _newProps;
+    this.unmountComponent();
     this.render();
-
     if (this._isMounted) {
-      this.componentDidMount();
+      this.mountComponent();
     }
+  }
+
+  protected mountComponent(): void {
+    this.componentDidMount();
+  }
+
+
+  protected unmountComponent(): void {
+    this.componentWillUnmount();
+  }
+
+  protected componentWillUnmount(): void {
   }
 
   public getElement(): HTMLElement | null {

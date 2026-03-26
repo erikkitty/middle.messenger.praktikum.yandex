@@ -14,9 +14,13 @@ export interface SettingsPageProps extends IUser {
   onLogout?: () => void;
 }
 
+function toTemplateProps<P extends object>(props: P): Record<keyof P, unknown> {
+  return props as Record<keyof P, unknown>;
+}
+
 export class SettingsPage extends Block<SettingsPageProps> {
   protected render(): void {
-    this.element = this.compile(template, this.props as unknown as Record<string, unknown>);
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 
   protected componentDidMount(): void {
@@ -58,18 +62,16 @@ export class SettingsPage extends Block<SettingsPageProps> {
     const editDataBtn = root.querySelector('[data-action="edit-data"]');
     editDataBtn?.addEventListener("click", () => {
       setMode("data");
-      const form = root.querySelector(
-        "#settings-change-data-form",
-      ) as HTMLFormElement | null;
+      const form = root.querySelector<HTMLFormElement>("#settings-change-data-form");
       if (!form) return;
-      (["email", "login", "first_name", "second_name", "display_name", "phone"] as const).forEach(
-        (name) => {
-          const input = form.querySelector(`input[name="${name}"]`) as HTMLInputElement | null;
-          if (!input) return;
-          const val = (this.props as unknown as Record<string, string>)[name];
-          input.value = val ? String(val) : "";
-        },
-      );
+      
+      const fieldNames = ["email", "login", "first_name", "second_name", "display_name", "phone"] as const;
+      fieldNames.forEach((name) => {
+        const input = form.querySelector<HTMLInputElement>(`input[name="${name}"]`);
+        if (!input) return;
+        const val = this.props[name];
+        input.value = val ? String(val) : "";
+      });
     });
 
     const editPasswordBtn = root.querySelector('[data-action="edit-password"]');
@@ -109,7 +111,7 @@ export class SettingsPage extends Block<SettingsPageProps> {
         const ok = inputs.every((i) => validateOne(i));
         const data = formDataToObject(changeDataForm);
         if (!ok) return;
-        const avatarImage = root.querySelector(".settings-avatar__image") as HTMLImageElement | null;
+        const avatarImage = root.querySelector<HTMLImageElement>(".settings-avatar__image");
         const avatar = avatarImage?.src || "";
         await settingsController.updateProfile({
           first_name: data.first_name,
@@ -122,7 +124,7 @@ export class SettingsPage extends Block<SettingsPageProps> {
         });
         updateView();
         if (avatar) {
-          const avatarImageEl = root.querySelector(".settings-avatar__image") as HTMLImageElement | null;
+          const avatarImageEl = root.querySelector<HTMLImageElement>(".settings-avatar__image");
           if (avatarImageEl) avatarImageEl.src = avatar;
         }
         setMode("profile");

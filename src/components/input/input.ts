@@ -1,6 +1,7 @@
 import template from "./input.hbs?raw";
 import "./input.scss";
 import { Block } from "../../core/Block";
+import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface InputProps {
   name: string;
@@ -19,6 +20,6 @@ export interface InputProps {
 
 export class Input extends Block<InputProps> {
   protected render(): void {
-    this.element = this.compile(template, this.props as unknown as Record<string, unknown>);
+    this.element = this.compile(template, toTemplateProps(this.props));
   }
 }

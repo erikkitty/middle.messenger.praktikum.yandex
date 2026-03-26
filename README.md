@@ -35,5 +35,8 @@ npm run dev
 npm run build
 npm run start
 
+# Проверка на стилистические и типовые ошибки
+npm run lint
+
 # Предпросмотр сборки
 npm run preview

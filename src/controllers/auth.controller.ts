@@ -18,7 +18,7 @@ export class AuthController {
   private async handleLogin(data: ILoginRequest): Promise<void> {
     try {
       await authModel.login(data);
-      window.location.hash = '/chat';
+      window.location.hash = '/messenger';
     } catch (error) {
       this.ensureView().setProps({ 
         error: error instanceof Error ? error.message : 'Ошибка входа'
@@ -27,7 +27,7 @@ export class AuthController {
   }
 
   private handleRegister(): void {
-    window.location.hash = '/register';
+    window.location.hash = '/sign-up';
   }
 
   public getView(): AuthForm {

@@ -20,7 +20,7 @@ export class RegisterController {
   private async handleRegister(data: IRegisterRequest): Promise<void> {
     try {
       await registerModel.register(data);
-      window.location.hash = "/chat";
+      window.location.hash = "/messenger";
     } catch (error) {
       this.ensureView().setProps({
         error: error instanceof Error ? error.message : "Заполните поле",

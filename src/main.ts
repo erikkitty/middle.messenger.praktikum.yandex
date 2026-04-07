@@ -99,12 +99,12 @@ router.addRoute("/", () => {
   mount(authController.getView());
 });
 
-router.addRoute("/register", () => {
+router.addRoute("/sign-up", () => {
   setLayout("auth");
   mount(registerController.getView());
 });
 
-router.addRoute("/chat", () => {
+router.addRoute("/messenger", () => {
   setLayout("chat");
   chatController
     .init()

@@ -15,7 +15,7 @@ export class SettingsController {
     this.view = new SettingsPage({
       ...user,
       onBack: () => {
-        window.location.hash = "/chat";
+        window.location.hash = "/messenger";
       },
       onLogout: () => {
         window.location.hash = "/";

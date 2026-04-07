@@ -15,7 +15,7 @@ export class Error404Controller {
   private handleBack(): void {
     const token = localStorage.getItem("access_token");
     if (token) {
-      window.location.hash = "/chat";
+      window.location.hash = "/messenger";
     } else {
       window.location.hash = "/";
     }

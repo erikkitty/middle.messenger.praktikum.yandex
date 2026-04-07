@@ -1,0 +1,12 @@
+<main class="auth-form">
+  <h2 class="auth-form__title">Вход</h2>
+  <form class="auth-form__form" novalidate>
+    {{{loginInput}}}
+    {{{passwordInput}}}
+    {{{submitButton}}}
+    {{{registerButton}}}
+    {{#if error}}
+      <div class="auth-form__error">{{error}}</div>
+    {{/if}}
+  </form>
+</main>

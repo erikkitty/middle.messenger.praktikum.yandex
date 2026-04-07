@@ -1,0 +1,15 @@
+.chat-header {
+  &__profile-btn {
+    background: none;
+    border: none;
+    border-radius: 4px;
+    color: #212121;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 8px 12px;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+  }
+}

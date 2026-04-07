@@ -1,0 +1,17 @@
+.ui-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ui-form__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.ui-form__content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+

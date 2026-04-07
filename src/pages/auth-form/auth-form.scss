@@ -1,0 +1,27 @@
+@use "./__input/auth-form__input";
+@use "./__button/auth-form__button";
+@use "./__link/auth-form__link";
+@use "../../assets/scss/variables" as *;
+
+.auth-form {
+  background: $color-bg-card;
+  border-radius: $border-radius-md;
+  box-shadow: $shadow-card;
+  max-width: 360px;
+  padding: $spacing-xl;
+  width: 100%;
+
+  &__title {
+    color: $color-text;
+    font-size: $font-size-xl;
+    font-weight: 600;
+    margin-bottom: $spacing-lg;
+    text-align: center;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+}

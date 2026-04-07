@@ -1,0 +1,16 @@
+<div class="{{wrapperClass}}">
+  {{#if label}}
+    <label class="{{labelClass}}" {{#if id}}for="{{id}}"{{/if}}>{{label}}</label>
+  {{/if}}
+  <input
+    {{#if id}}id="{{id}}"{{/if}}
+    class="{{inputClass}}"
+    name="{{name}}"
+    type="{{type}}"
+    value="{{value}}"
+    placeholder="{{placeholder}}"
+    {{#if autocomplete}}autocomplete="{{autocomplete}}"{{/if}}
+  />
+  <span class="{{errorClass}}">{{error}}</span>
+</div>
+

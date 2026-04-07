@@ -1,0 +1,25 @@
+@use "../../../assets/scss/variables" as *;
+
+.register-form__link {
+  background: none;
+  border: none;
+  color: $color-primary;
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &--login {
+    margin-top: $spacing-sm;
+  }
+}

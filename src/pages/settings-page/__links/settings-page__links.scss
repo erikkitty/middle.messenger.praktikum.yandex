@@ -1,0 +1,35 @@
+.settings-links {
+  display: flex;
+  font-family: "Oswald", sans-serif;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 400px;
+  width: 100%;
+
+  &__link {
+    background: none;
+    border: none;
+    border-bottom: 1px solid #EFEFEF;
+    cursor: pointer;
+    display: block;
+    font-size: 14px;
+    padding: 12px 0;
+    text-align: left;
+    transition: opacity 0.2s;
+    width: 100%;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    &--edit,
+    &--password {
+      color: #8A7BD1;
+    }
+
+    &--logout {
+      border-bottom: none;
+      color: #FF0000;
+    }
+  }
+}

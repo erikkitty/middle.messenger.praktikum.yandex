@@ -1,0 +1,21 @@
+<main class="settings-page">
+  <div class="settings-button_container">
+    <button class="settings-button__back" data-action="back">Назад</button>
+  </div>
+
+  <main class="settings-content" id="settings-content">
+    <div class="settings-content__profile">
+      {{> settings-page/__avatar/settings-page__avatar }}
+      {{> settings-page/__user-info/settings-page__user-info }}
+      {{> settings-page/__links/settings-page__links }}
+    </div>
+    <div class="settings-content__change-data" id="settings-change-data-slot">
+      {{> settings-page/__change-data/settings-page__change-data }}
+    </div>
+    <div class="settings-content__change-password" id="settings-change-password-slot">
+      {{> settings-page/__change-password/settings-page__change-password }}
+    </div>
+  </main>
+
+  {{> settings-page/__modal/settings-page__modal }}
+</main>

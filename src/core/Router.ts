@@ -3,21 +3,31 @@ type RouteHandler = () => void;
 interface IRoute {
   path: string;
   handler: RouteHandler;
+  requiresAuth?: boolean;
 }
 
 export class Router {
   private routes: IRoute[] = [];
+  private authRoutes: string[] = ['/', '/sign-up'];
 
   constructor() {
     window.addEventListener('hashchange', () => this.handleRoute());
   }
 
-  public addRoute(path: string, handler: RouteHandler): void {
-    this.routes.push({ path, handler });
+  public addRoute(path: string, handler: RouteHandler, requiresAuth: boolean = false): void {
+    this.routes.push({ path, handler, requiresAuth });
+  }
+
+  public setAuthRoutes(routes: string[]): void {
+    this.authRoutes = routes;
   }
 
   public navigate(path: string): void {
     window.location.hash = path;
+  }
+
+  private isAuthenticated(): boolean {
+    return localStorage.getItem('app.user') !== null;
   }
 
   private handleRoute(): void {
@@ -41,6 +51,16 @@ export class Router {
     }
 
     if (route) {
+      if (route.requiresAuth && !this.isAuthenticated()) {
+        window.location.hash = '/';
+        return;
+      }
+
+      if (this.authRoutes.includes(hash) && this.isAuthenticated()) {
+        window.location.hash = '/messenger';
+        return;
+      }
+
       this.clearApp();
       route.handler();
     }

@@ -72,11 +72,16 @@ export class AuthForm extends Block<AuthFormViewProps> {
   }
 
   protected componentDidMount(): void {
-    const form = this.element?.querySelector<HTMLFormElement>(".auth-form__form");
+    const form =
+      this.element?.querySelector<HTMLFormElement>(".auth-form__form");
     if (!form) return;
 
-    const loginInput = form.querySelector<HTMLInputElement>('input[name="login"]');
-    const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
+    const loginInput = form.querySelector<HTMLInputElement>(
+      'input[name="login"]',
+    );
+    const passwordInput = form.querySelector<HTMLInputElement>(
+      'input[name="password"]',
+    );
     if (!loginInput || !passwordInput) return;
 
     const validateOne = (input: HTMLInputElement): boolean => {
@@ -130,11 +135,16 @@ export class AuthForm extends Block<AuthFormViewProps> {
   }
 
   protected componentWillUnmount(): void {
-    const form = this.element?.querySelector<HTMLFormElement>(".auth-form__form");
+    const form =
+      this.element?.querySelector<HTMLFormElement>(".auth-form__form");
     if (!form) return;
 
-    const loginInput = form.querySelector<HTMLInputElement>('input[name="login"]');
-    const passwordInput = form.querySelector<HTMLInputElement>('input[name="password"]');
+    const loginInput = form.querySelector<HTMLInputElement>(
+      'input[name="login"]',
+    );
+    const passwordInput = form.querySelector<HTMLInputElement>(
+      'input[name="password"]',
+    );
 
     if (loginInput && this._blurHandlers[0]) {
       loginInput.removeEventListener("blur", this._blurHandlers[0]);
@@ -147,7 +157,9 @@ export class AuthForm extends Block<AuthFormViewProps> {
       form.removeEventListener("submit", this._submitHandler);
     }
 
-    const registerButton = this.element?.querySelector(".auth-form__link--register");
+    const registerButton = this.element?.querySelector(
+      ".auth-form__link--register",
+    );
     if (registerButton && this._registerHandler) {
       registerButton.removeEventListener("click", this._registerHandler);
     }
@@ -157,13 +169,17 @@ export class AuthForm extends Block<AuthFormViewProps> {
     this._registerHandler = null;
   }
 
-  protected componentDidUpdate(oldProps: AuthFormViewProps, newProps: AuthFormViewProps): void {
+  protected componentDidUpdate(
+    oldProps: AuthFormViewProps,
+    newProps: AuthFormViewProps,
+  ): void {
     super.componentDidUpdate(oldProps, newProps);
 
     if (!this.element) return;
     if (!newProps.error || newProps.error === oldProps.error) return;
 
-    const form = this.element.querySelector<HTMLFormElement>(".auth-form__form");
+    const form =
+      this.element.querySelector<HTMLFormElement>(".auth-form__form");
     if (!form) return;
 
     const inputs = form.querySelectorAll<HTMLInputElement>(".auth-form__input");
@@ -177,4 +193,3 @@ export class AuthForm extends Block<AuthFormViewProps> {
     });
   }
 }
-

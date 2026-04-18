@@ -1,4 +1,5 @@
 import { settingsModel } from "../models/settings.model";
+import { authModel } from "../models/auth.model";
 import { SettingsPage } from "../pages/settings-page/settings-page";
 import type {
   IChangePasswordRequest,
@@ -17,10 +18,18 @@ export class SettingsController {
       onBack: () => {
         window.location.hash = "/messenger";
       },
-      onLogout: () => {
-        window.location.hash = "/";
-      },
+      onLogout: () => this.handleLogout(),
     });
+  }
+
+  private async handleLogout(): Promise<void> {
+    try {
+      await authModel.logout();
+      window.location.hash = "/";
+    } catch (error) {
+      console.error("Logout error:", error);
+      window.location.hash = "/";
+    }
   }
 
   public async updateProfile(data: IUpdateProfileRequest): Promise<void> {
@@ -38,6 +47,13 @@ export class SettingsController {
 
   public async changePassword(data: IChangePasswordRequest): Promise<void> {
     await settingsModel.changePassword(data);
+  }
+
+  public async uploadAvatar(file: File): Promise<void> {
+    const user = await settingsModel.uploadAvatar(file);
+    this.view?.setProps({
+      avatar: user.avatar,
+    });
   }
 
   public getView(): SettingsPage {

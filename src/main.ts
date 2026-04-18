@@ -110,7 +110,7 @@ router.addRoute("/messenger", () => {
     .init()
     .then(() => mount(chatController.getView()))
     .catch(console.error);
-});
+}, true);
 
 router.addRoute("/settings", () => {
   setLayout("settings");
@@ -118,7 +118,7 @@ router.addRoute("/settings", () => {
     .init()
     .then(() => mount(settingsController.getView()))
     .catch(console.error);
-});
+}, true);
 
 router.addRoute("/404", () => {
   setLayout("error");

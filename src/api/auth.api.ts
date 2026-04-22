@@ -1,9 +1,18 @@
 import { HttpClient } from '../utils/http';
-import type { ILoginRequest, IRegisterRequest, IUser } from '../types/domains';
+import {
+  type ILoginRequest,
+  type IRegisterRequest,
+  type IUser,
+  normalizeUser,
+} from '../types/domains';
 
-const API_URL = 'https://ya-praktikum.tech/api/v2';
+const API_URL = 'https://ya-praktikum.tech/api/v2/';
 
 const http = new HttpClient(API_URL);
+
+interface ISignInResponseBody {
+  user?: IUser & { id?: string | number };
+}
 
 export interface ISignUpResponse {
   id: number;
@@ -15,23 +24,23 @@ export interface ISignUpResponse {
   phone: string;
 }
 
-export interface ISignInResponse {
-  user: IUser;
-  token: string;
-}
-
 export async function signUp(data: IRegisterRequest): Promise<ISignUpResponse> {
-  return http.post<ISignUpResponse>('/auth/signup', data);
+  return http.post<ISignUpResponse>('auth/signup', data);
 }
 
-export async function signIn(data: ILoginRequest): Promise<ISignInResponse> {
-  return http.post<ISignInResponse>('/auth/signin', data);
+export async function signIn(data: ILoginRequest): Promise<IUser> {
+  const raw = await http.post<ISignInResponseBody | null>('auth/signin', data);
+  if (raw?.user) {
+    return normalizeUser(raw.user);
+  }
+  return normalizeUser(await getUser());
 }
 
 export async function signOut(): Promise<void> {
-  return http.post<void>('/auth/logout');
+  return http.post<void>('auth/logout');
 }
 
 export async function getUser(): Promise<IUser> {
-  return http.get<IUser>('/user');
+  const user = await http.get<IUser & { id?: string | number }>('user');
+  return normalizeUser(user);
 }

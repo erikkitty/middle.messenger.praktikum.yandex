@@ -19,7 +19,6 @@ export interface RegisterFormProps {
     email: string;
     phone: string;
     password: string;
-    confirm_password: string;
   }) => void;
   onLogin?: () => void;
   error?: string;
@@ -164,7 +163,6 @@ export class RegisterForm extends Block<RegisterFormViewProps> {
       if (!ok) return;
 
       const data = formDataToObject(form);
-      console.log("register submit", data);
 
       const payload = {
         first_name: data.first_name,
@@ -173,7 +171,6 @@ export class RegisterForm extends Block<RegisterFormViewProps> {
         email: data.email,
         phone: data.phone,
         password: data.password,
-        confirm_password: data.confirm_password,
       };
       this.props.onSubmit?.(payload);
     };
@@ -220,22 +217,6 @@ export class RegisterForm extends Block<RegisterFormViewProps> {
 
   protected componentDidUpdate(oldProps: RegisterFormViewProps, newProps: RegisterFormViewProps): void {
     super.componentDidUpdate(oldProps, newProps);
-
-    if (!this.element) return;
-    if (!newProps.error || newProps.error === oldProps.error) return;
-
-    const form = this.element.querySelector<HTMLFormElement>(".register-form__form");
-    if (!form) return;
-
-    const inputs = form.querySelectorAll<HTMLInputElement>(".register-form__input");
-    inputs.forEach((input) => {
-      const wrapper = input.closest(".register-form__input-wrapper");
-      const errEl = wrapper?.querySelector(".register-form__input-error");
-      wrapper?.classList.add("has-error");
-      if (errEl && newProps.error) {
-        errEl.textContent = newProps.error;
-      }
-    });
   }
 }
 

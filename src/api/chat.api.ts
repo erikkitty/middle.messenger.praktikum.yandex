@@ -1,6 +1,6 @@
 import { HttpClient } from '../utils/http';
 
-const API_URL = 'https://ya-praktikum.tech/api/v2';
+const API_URL = 'https://ya-praktikum.tech/api/v2/';
 
 const http = new HttpClient(API_URL);
 
@@ -52,27 +52,27 @@ export interface ICreateChatResponse {
 }
 
 export async function getChats(): Promise<IChat[]> {
-  return http.get<IChat[]>('/chats');
+  return http.get<IChat[]>('chats');
 }
 
 export async function createChat(data: ICreateChatRequest): Promise<ICreateChatResponse> {
-  return http.post<ICreateChatResponse>('/chats', data);
+  return http.post<ICreateChatResponse>('chats', data);
 }
 
 export async function getMessages(chatId: number, limit: number = 50): Promise<IChatMessage[]> {
-  return http.get<IChatMessage[]>(`/chats/${chatId}/history`, { limit });
+  return http.get<IChatMessage[]>(`chats/${chatId}/history`, { limit });
 }
 
 export async function sendMessage(chatId: number, content: string): Promise<IChatMessage> {
-  return http.post<IChatMessage>(`/chats/${chatId}`, { content });
+  return http.post<IChatMessage>(`chats/${chatId}`, { content });
 }
 
 export async function addUsersToChat(chatId: number, userIds: number[]): Promise<void> {
-  return http.put<void>(`/chats/users`, { users: userIds, chatId });
+  return http.put<void>(`chats/users`, { users: userIds, chatId });
 }
 
 export async function removeUsersFromChat(chatId: number, userIds: number[]): Promise<void> {
-  return http.delete<void>(`/chats/users`, { users: userIds, chatId });
+  return http.delete<void>(`chats/users`, { users: userIds, chatId });
 }
 
 export async function uploadChatAvatar(chatId: number, file: File): Promise<void> {
@@ -85,6 +85,7 @@ export async function uploadChatAvatar(chatId: number, file: File): Promise<void
     const url = `${API_URL}/chats/avatar`;
 
     xhr.open('PUT', url);
+    xhr.withCredentials = true;
     xhr.setRequestHeader('Accept', 'application/json');
 
     xhr.onload = () => {
@@ -103,5 +104,5 @@ export async function uploadChatAvatar(chatId: number, file: File): Promise<void
 }
 
 export async function getChatUsers(chatId: number): Promise<{ id: number; login: string }[]> {
-  return http.get<{ id: number; login: string }[]>(`/chats/${chatId}/users`);
+  return http.get<{ id: number; login: string }[]>(`chats/${chatId}/users`);
 }

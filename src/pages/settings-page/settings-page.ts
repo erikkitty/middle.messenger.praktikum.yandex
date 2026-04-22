@@ -7,7 +7,6 @@ import { collectStringValues, setFieldError, validateField } from "../../utils/v
 import { settingsController } from "../../controllers/settings.controller";
 import { initSettingsAvatar } from "./__avatar/settings-page__avatar";
 import { initSettingsModal } from "./__modal/settings-page__modal";
-import { updateView } from "./__user-info/settings-page__user-info";
 
 export interface SettingsPageProps extends IUser {
   onBack?: () => void;
@@ -122,7 +121,6 @@ export class SettingsPage extends Block<SettingsPageProps> {
           display_name: data.display_name,
           avatar: avatar || undefined,
         });
-        updateView();
         if (avatar) {
           const avatarImageEl = root.querySelector<HTMLImageElement>(".settings-avatar__image");
           if (avatarImageEl) avatarImageEl.src = avatar;

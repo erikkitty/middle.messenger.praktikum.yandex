@@ -12,6 +12,7 @@ export class ChatController {
       this.view = new ChatPage({
         onSendMessage: (text) => this.handleSendMessage(text),
         onChatSelect: (chatId) => this.handleChatSelect(chatId),
+        onCreateChat: (title) => this.handleCreateChat(title),
       });
     }
     return this.view;
@@ -59,6 +60,24 @@ export class ChatController {
     } catch (error) {
       this.ensureView().setProps({ 
         error: error instanceof Error ? error.message : 'Ошибка отправки' 
+      });
+    }
+  }
+
+  private async handleCreateChat(title: string): Promise<void> {
+    try {
+      const created = await chatModel.createChat(title);
+      const chats = await chatModel.getChats();
+      this.currentChatId = created.id;
+      this.messages = [];
+      this.ensureView().setProps({
+        chats,
+        currentChatId: created.id,
+        messages: [],
+      });
+    } catch (error) {
+      this.ensureView().setProps({
+        error: error instanceof Error ? error.message : "Ошибка создания чата",
       });
     }
   }

@@ -1,3 +1,5 @@
+import { isAuthenticated } from '../models/auth.model';
+
 type RouteHandler = () => void;
 
 interface IRoute {
@@ -26,10 +28,6 @@ export class Router {
     window.location.hash = path;
   }
 
-  private isAuthenticated(): boolean {
-    return localStorage.getItem('app.user') !== null;
-  }
-
   private handleRoute(): void {
     const hash = window.location.hash.slice(1) || '/';
 
@@ -51,12 +49,12 @@ export class Router {
     }
 
     if (route) {
-      if (route.requiresAuth && !this.isAuthenticated()) {
+      if (route.requiresAuth && !isAuthenticated()) {
         window.location.hash = '/';
         return;
       }
 
-      if (this.authRoutes.includes(hash) && this.isAuthenticated()) {
+      if (this.authRoutes.includes(hash) && isAuthenticated()) {
         window.location.hash = '/messenger';
         return;
       }

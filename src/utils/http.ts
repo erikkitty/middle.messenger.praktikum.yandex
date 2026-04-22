@@ -1,4 +1,4 @@
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 interface IRequestOptions {
   method?: HttpMethod;
@@ -47,10 +47,6 @@ export class HttpClient {
     return this.request<T>({ method: 'DELETE', path, data });
   }
 
-  public patch<T>(path: string, data?: unknown): Promise<T> {
-    return this.request<T>({ method: 'PATCH', path, data });
-  }
-
   private buildUrl(path: string, queryParams?: Record<string, string | number | boolean>): string {
     const url = new URL(path, this.baseUrl);
 
@@ -72,12 +68,18 @@ export class HttpClient {
 
       xhr.open(method, url);
       xhr.timeout = timeout;
+      xhr.withCredentials = true;
 
-      // Устанавливаем заголовки по умолчанию
-      xhr.setRequestHeader('Content-Type', 'application/json');
+      const sendJsonBody =
+        method === 'POST' ||
+        method === 'PUT' ||
+        (method === 'DELETE' && data !== undefined && data !== null);
+
+      if (sendJsonBody) {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+      }
       xhr.setRequestHeader('Accept', 'application/json');
 
-      // Добавляем пользовательские заголовки
       Object.entries(headers).forEach(([key, value]) => {
         xhr.setRequestHeader(key, value);
       });
@@ -89,7 +91,7 @@ export class HttpClient {
           try {
             const responseData = xhr.responseText ? JSON.parse(xhr.responseText) : null;
             resolve(responseData as T);
-          } catch (e) {
+          } catch {
             resolve(null as T);
           }
         } else {
@@ -117,7 +119,11 @@ export class HttpClient {
         reject(new ApiError(408, 'Request timeout'));
       };
 
-      if (method === 'GET' || method === 'DELETE') {
+      if (method === 'GET') {
+        xhr.send();
+      } else if (method === 'DELETE' && (data === undefined || data === null)) {
+        xhr.send();
+      } else if (data === undefined || data === null) {
         xhr.send();
       } else {
         const body = typeof data === 'string' ? data : JSON.stringify(data);

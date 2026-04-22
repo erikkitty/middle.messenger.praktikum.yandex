@@ -19,19 +19,32 @@ export function isAuthenticated(): boolean {
 export class AuthModel {
   public async login(data: ILoginRequest): Promise<IUser> {
     try {
-      const response = await signIn(data);
-      saveUser(response.user);
-      return response.user;
+      const user = await signIn(data);
+      saveUser(user);
+      return user;
     } catch (error) {
       if (error instanceof ApiError) {
-        if (error.status === 401 || error.status === 400) {
-          throw new Error('Неверный логин или пароль');
+        const reason =
+          error.data && typeof error.data === "object" && "reason" in error.data
+            ? String((error.data as { reason: string }).reason)
+            : "";
+
+        if (error.status === 400 && reason === "User already in system") {
+          const currentUser = await this.getCurrentUser();
+          if (currentUser) {
+            return currentUser;
+          }
+          throw new Error("Пользователь уже авторизован", { cause: error });
         }
-        if (error.data && typeof error.data === 'object' && 'reason' in error.data) {
-          throw new Error((error.data as { reason: string }).reason);
+
+        if (error.status === 401) {
+          throw new Error('Неверный логин или пароль', { cause: error });
+        }
+        if (reason) {
+          throw new Error(reason, { cause: error });
         }
       }
-      throw new Error('Ошибка входа в систему');
+      throw new Error('Ошибка входа в систему', { cause: error });
     }
   }
 

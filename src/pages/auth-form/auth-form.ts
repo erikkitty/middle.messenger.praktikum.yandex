@@ -113,7 +113,6 @@ export class AuthForm extends Block<AuthFormViewProps> {
       if (!ok) return;
 
       const data = formDataToObject(form);
-      console.log("auth submit", data);
 
       this.props.onSubmit?.({
         login: String(data.login ?? ""),
@@ -174,22 +173,5 @@ export class AuthForm extends Block<AuthFormViewProps> {
     newProps: AuthFormViewProps,
   ): void {
     super.componentDidUpdate(oldProps, newProps);
-
-    if (!this.element) return;
-    if (!newProps.error || newProps.error === oldProps.error) return;
-
-    const form =
-      this.element.querySelector<HTMLFormElement>(".auth-form__form");
-    if (!form) return;
-
-    const inputs = form.querySelectorAll<HTMLInputElement>(".auth-form__input");
-    inputs.forEach((input) => {
-      const wrapper = input.closest(".auth-form__input-wrapper");
-      const errEl = wrapper?.querySelector(".auth-form__input-error");
-      wrapper?.classList.add("has-error");
-      if (errEl) {
-        errEl.textContent = newProps.error || "Неверный логин или пароль";
-      }
-    });
   }
 }

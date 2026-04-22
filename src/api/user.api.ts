@@ -1,7 +1,12 @@
 import { HttpClient } from '../utils/http';
-import type { IChangePasswordRequest, IUpdateProfileRequest, IUser } from '../types/domains';
+import {
+  type IChangePasswordRequest,
+  type IUpdateProfileRequest,
+  type IUser,
+  normalizeUser,
+} from '../types/domains';
 
-const API_URL = 'https://ya-praktikum.tech/api/v2';
+const API_URL = 'https://ya-praktikum.tech/api/v2/';
 
 const http = new HttpClient(API_URL);
 
@@ -10,11 +15,12 @@ export interface IAvatarResponse {
 }
 
 export async function updateProfile(data: IUpdateProfileRequest): Promise<IUser> {
-  return http.put<IUser>('/user/profile', data);
+  const user = await http.put<IUser & { id?: string | number }>('user/profile', data);
+  return normalizeUser(user);
 }
 
 export async function changePassword(data: IChangePasswordRequest): Promise<void> {
-  return http.put<void>('/user/password', data);
+  return http.put<void>('user/password', data);
 }
 
 export async function uploadAvatar(file: File): Promise<IUser> {
@@ -26,13 +32,15 @@ export async function uploadAvatar(file: File): Promise<IUser> {
     const url = `${API_URL}/user/avatar`;
 
     xhr.open('PUT', url);
+    xhr.withCredentials = true;
     xhr.setRequestHeader('Accept', 'application/json');
 
     xhr.onload = () => {
       if (xhr.status >= 200 && xhr.status < 300) {
         try {
           const response = JSON.parse(xhr.responseText);
-          resolve(response.user || response);
+          const raw = response.user ?? response;
+          resolve(normalizeUser(raw as IUser & { id?: string | number }));
         } catch {
           reject(new Error('Failed to parse avatar response'));
         }

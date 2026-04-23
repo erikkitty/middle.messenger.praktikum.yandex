@@ -1,10 +1,16 @@
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type Primitive = string | number | boolean;
+type QueryParams = Record<string, Primitive>;
+type RequestData = unknown;
+type RequestPath = string;
+export const API_BASE_URL = "https://ya-praktikum.tech/api/v2/";
+export const WS_BASE_URL = API_BASE_URL.replace(/^http/, "ws").replace(/\/api\/v2\/$/, "/ws/");
 
 interface IRequestOptions {
   method?: HttpMethod;
-  data?: unknown;
+  data?: RequestData;
   headers?: Record<string, string>;
-  queryParams?: Record<string, string | number | boolean>;
+  queryParams?: QueryParams;
   timeout?: number;
 }
 
@@ -26,28 +32,28 @@ export class HttpClient {
   private readonly baseUrl: string;
   private readonly timeout: number;
 
-  constructor(baseUrl: string, timeout: number = 10000) {
-    this.baseUrl = baseUrl;
+  constructor(endpoint: string = "", timeout: number = 10000) {
+    this.baseUrl = new URL(endpoint.replace(/^\/+/, ""), API_BASE_URL).toString();
     this.timeout = timeout;
   }
 
-  public get<T>(path: string, queryParams?: Record<string, string | number | boolean>): Promise<T> {
+  public get<T>(path: RequestPath, queryParams?: QueryParams): Promise<T> {
     return this.request<T>({ method: 'GET', path, queryParams });
   }
 
-  public post<T>(path: string, data?: unknown): Promise<T> {
+  public post<T>(path: RequestPath, data?: RequestData): Promise<T> {
     return this.request<T>({ method: 'POST', path, data });
   }
 
-  public put<T>(path: string, data?: unknown): Promise<T> {
+  public put<T>(path: RequestPath, data?: RequestData): Promise<T> {
     return this.request<T>({ method: 'PUT', path, data });
   }
 
-  public delete<T>(path: string, data?: unknown): Promise<T> {
+  public delete<T>(path: RequestPath, data?: RequestData): Promise<T> {
     return this.request<T>({ method: 'DELETE', path, data });
   }
 
-  private buildUrl(path: string, queryParams?: Record<string, string | number | boolean>): string {
+  private buildUrl(path: RequestPath, queryParams?: QueryParams): string {
     const url = new URL(path, this.baseUrl);
 
     if (queryParams) {

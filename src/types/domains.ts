@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../utils/http";
+
 export interface ILoginRequest {
   login: string;
   password: string;
@@ -31,7 +33,7 @@ function normalizeAvatarUrl(avatar: unknown): string | undefined {
   if (!avatar || typeof avatar !== "string") return undefined;
   if (avatar.startsWith("http://") || avatar.startsWith("https://")) return avatar;
 
-  const base = "https://ya-praktikum.tech/api/v2";
+  const base = API_BASE_URL.replace(/\/$/, "");
 
   if (avatar.startsWith("/resources/")) return `${base}${avatar}`;
   if (avatar.startsWith("/")) return `${base}/resources${avatar}`;

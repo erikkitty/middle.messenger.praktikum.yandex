@@ -33,7 +33,9 @@ export class HttpClient {
   private readonly timeout: number;
 
   constructor(endpoint: string = "", timeout: number = 10000) {
-    this.baseUrl = new URL(endpoint.replace(/^\/+/, ""), API_BASE_URL).toString();
+    const normalizedEndpoint = endpoint.replace(/^\/+|\/+$/g, "");
+    const endpointPath = normalizedEndpoint ? `${normalizedEndpoint}/` : "";
+    this.baseUrl = new URL(endpointPath, API_BASE_URL).toString();
     this.timeout = timeout;
   }
 

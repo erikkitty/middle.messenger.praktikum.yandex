@@ -4,11 +4,7 @@ import { Block } from "../../core/Block";
 import { Input } from "../../components/input/input";
 import { Button } from "../../components/button/button";
 import { formDataToObject } from "../../utils/form";
-import {
-  collectStringValues,
-  setFieldError,
-  validateField,
-} from "../../utils/validation";
+import { setFieldError } from "../../utils/validation";
 import { toTemplateProps } from "../../utils/toTemplateProps";
 
 export interface AuthFormProps {
@@ -85,17 +81,24 @@ export class AuthForm extends Block<AuthFormViewProps> {
     if (!loginInput || !passwordInput) return;
 
     const validateOne = (input: HTMLInputElement): boolean => {
-      const all = collectStringValues(form);
-      const r = validateField(input.name, input.value, all);
-      const msg = r.ok ? "" : r.message;
+      const msg = input.value.trim() ? "" : "Заполните поле";
       setFieldError(
         input,
         msg,
         ".auth-form__input-wrapper",
         ".auth-form__input-error",
       );
-      return r.ok;
+      return !msg;
     };
+
+    if (this.props.error) {
+      setFieldError(
+        passwordInput,
+        this.props.error,
+        ".auth-form__input-wrapper",
+        ".auth-form__input-error",
+      );
+    }
 
     this._blurHandlers = [
       () => validateOne(loginInput),
@@ -104,6 +107,8 @@ export class AuthForm extends Block<AuthFormViewProps> {
 
     loginInput.addEventListener("blur", this._blurHandlers[0]);
     passwordInput.addEventListener("blur", this._blurHandlers[1]);
+    loginInput.addEventListener("input", this._blurHandlers[0]);
+    passwordInput.addEventListener("input", this._blurHandlers[1]);
 
     this._submitHandler = (e: Event) => {
       e.preventDefault();
@@ -147,9 +152,11 @@ export class AuthForm extends Block<AuthFormViewProps> {
 
     if (loginInput && this._blurHandlers[0]) {
       loginInput.removeEventListener("blur", this._blurHandlers[0]);
+      loginInput.removeEventListener("input", this._blurHandlers[0]);
     }
     if (passwordInput && this._blurHandlers[1]) {
       passwordInput.removeEventListener("blur", this._blurHandlers[1]);
+      passwordInput.removeEventListener("input", this._blurHandlers[1]);
     }
 
     if (this._submitHandler) {

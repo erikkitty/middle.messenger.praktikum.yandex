@@ -59,13 +59,19 @@ export async function createChat(data: ICreateChatRequest): Promise<ICreateChatR
   return http.post<ICreateChatResponse>('chats', data);
 }
 
-export async function getMessages(chatId: number, limit: number = 50): Promise<IChatMessage[]> {
-  return http.get<IChatMessage[]>(`chats/${chatId}/history`, { limit });
+export async function deleteChat(chatId: number): Promise<void> {
+  return http.delete<void>("chats", { chatId });
 }
 
-export async function sendMessage(chatId: number, content: string): Promise<IChatMessage> {
-  return http.post<IChatMessage>(`chats/${chatId}`, { content });
+export interface IChatTokenResponse {
+  token: string;
 }
+
+export async function getChatToken(chatId: number): Promise<IChatTokenResponse> {
+  return http.post<IChatTokenResponse>(`chats/token/${chatId}`);
+}
+
+export const CHAT_WS_BASE_URL = "wss://ya-praktikum.tech/ws/chats";
 
 export async function addUsersToChat(chatId: number, userIds: number[]): Promise<void> {
   return http.put<void>(`chats/users`, { users: userIds, chatId });
@@ -80,29 +86,18 @@ export async function uploadChatAvatar(chatId: number, file: File): Promise<void
   formData.append('avatar', file);
   formData.append('chatId', String(chatId));
 
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const url = `${API_URL}/chats/avatar`;
-
-    xhr.open('PUT', url);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader('Accept', 'application/json');
-
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        resolve();
-      } else {
-        reject(new Error(`Upload failed: ${xhr.status}`));
-      }
-    };
-
-    xhr.onerror = () => reject(new Error('Network error during avatar upload'));
-    xhr.ontimeout = () => reject(new Error('Avatar upload timeout'));
-
-    xhr.send(formData);
-  });
+  await http.put<void>("chats/avatar", formData);
 }
 
-export async function getChatUsers(chatId: number): Promise<{ id: number; login: string }[]> {
-  return http.get<{ id: number; login: string }[]>(`chats/${chatId}/users`);
+export interface IChatUserResponse {
+  id: number;
+  login: string;
+  first_name?: string;
+  second_name?: string;
+  display_name?: string;
+  avatar?: string | null;
+}
+
+export async function getChatUsers(chatId: number): Promise<IChatUserResponse[]> {
+  return http.get<IChatUserResponse[]>(`chats/${chatId}/users`);
 }

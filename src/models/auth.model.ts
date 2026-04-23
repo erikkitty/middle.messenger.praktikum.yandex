@@ -61,16 +61,27 @@ export class AuthModel {
       const user = await getUser();
       saveUser(user);
       return user;
-    } catch {
-      const stored = localStorage.getItem(LS_USER_KEY);
-      if (stored) {
-        try {
-          return JSON.parse(stored) as IUser;
-        } catch {
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 401 || error.status === 403) {
+          // Cookies/session lost (e.g. cleared in browser) -> treat as logged out.
+          removeUser();
+          return null;
+        }
+        // Network error: allow offline fallback to cached user.
+        if (error.status !== 0) {
+          removeUser();
           return null;
         }
       }
-      return null;
+
+      const stored = localStorage.getItem(LS_USER_KEY);
+      if (!stored) return null;
+      try {
+        return JSON.parse(stored) as IUser;
+      } catch {
+        return null;
+      }
     }
   }
 }

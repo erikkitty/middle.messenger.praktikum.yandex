@@ -23,7 +23,6 @@ export interface IUser {
   avatar?: string;
 }
 
-/** Приводит ответ API к доменной модели (id из API может быть числом). */
 export function normalizeUser(u: IUser & { id?: string | number }): IUser {
   return { ...u, id: String(u.id), avatar: normalizeAvatarUrl(u.avatar) };
 }

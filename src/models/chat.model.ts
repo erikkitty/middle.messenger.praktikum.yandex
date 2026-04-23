@@ -131,7 +131,7 @@ export class ChatModel {
         try {
           socket.send(JSON.stringify({ content: "0", type: "get old" }));
         } catch {
-          // ignore, onError will fire if broken
+          // ignore
         }
       };
 

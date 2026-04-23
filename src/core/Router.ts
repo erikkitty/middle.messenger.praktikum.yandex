@@ -15,10 +15,6 @@ export class Router {
   constructor() {
     window.addEventListener('popstate', () => this.handleRoute());
 
-<<<<<<< HEAD
-    // Optional: handle regular <a href="/path"> navigation as SPA navigation.
-=======
->>>>>>> sprint_3
     document.addEventListener("click", (e) => {
       const event = e as MouseEvent;
       if (event.defaultPrevented) return;

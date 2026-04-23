@@ -27,7 +27,7 @@ export class ApiError extends Error {
     this.name = 'ApiError';
   }
 }
-
+ 
 export class HttpClient {
   private readonly baseUrl: string;
   private readonly timeout: number;

@@ -70,10 +70,13 @@ export class HttpClient {
       xhr.timeout = timeout;
       xhr.withCredentials = true;
 
+      const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
+
       const sendJsonBody =
-        method === 'POST' ||
-        method === 'PUT' ||
-        (method === 'DELETE' && data !== undefined && data !== null);
+        !isFormData &&
+        (method === 'POST' ||
+          method === 'PUT' ||
+          (method === 'DELETE' && data !== undefined && data !== null));
 
       if (sendJsonBody) {
         xhr.setRequestHeader('Content-Type', 'application/json');
@@ -125,6 +128,8 @@ export class HttpClient {
         xhr.send();
       } else if (data === undefined || data === null) {
         xhr.send();
+      } else if (isFormData) {
+        xhr.send(data);
       } else {
         const body = typeof data === 'string' ? data : JSON.stringify(data);
         xhr.send(body);

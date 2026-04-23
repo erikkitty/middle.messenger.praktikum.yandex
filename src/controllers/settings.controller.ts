@@ -5,6 +5,7 @@ import type {
   IChangePasswordRequest,
   IUpdateProfileRequest,
 } from "../types/domains";
+import { router } from "../core/Router";
 
 export class SettingsController {
   private view: SettingsPage | null = null;
@@ -16,7 +17,7 @@ export class SettingsController {
     this.view = new SettingsPage({
       ...user,
       onBack: () => {
-        window.location.hash = "/messenger";
+        router.navigate("/messenger");
       },
       onLogout: () => this.handleLogout(),
     });
@@ -25,10 +26,10 @@ export class SettingsController {
   private async handleLogout(): Promise<void> {
     try {
       await authModel.logout();
-      window.location.hash = "/";
+      router.navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
-      window.location.hash = "/";
+      router.navigate("/");
     }
   }
 

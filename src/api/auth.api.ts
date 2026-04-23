@@ -41,6 +41,6 @@ export async function signOut(): Promise<void> {
 }
 
 export async function getUser(): Promise<IUser> {
-  const user = await http.get<IUser & { id?: string | number }>('user');
+  const user = await http.get<IUser & { id?: string | number }>('auth/user');
   return normalizeUser(user);
 }

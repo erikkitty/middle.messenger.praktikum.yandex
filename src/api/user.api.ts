@@ -27,31 +27,19 @@ export async function uploadAvatar(file: File): Promise<IUser> {
   const formData = new FormData();
   formData.append('avatar', file);
 
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    const url = `${API_URL}/user/avatar`;
+  const response = await http.put<unknown>("user/profile/avatar", formData);
+  const raw =
+    response && typeof response === "object" && "user" in response
+      ? (response as { user: IUser & { id?: string | number } }).user
+      : (response as IUser & { id?: string | number });
 
-    xhr.open('PUT', url);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader('Accept', 'application/json');
+  return normalizeUser(raw);
+}
 
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const response = JSON.parse(xhr.responseText);
-          const raw = response.user ?? response;
-          resolve(normalizeUser(raw as IUser & { id?: string | number }));
-        } catch {
-          reject(new Error('Failed to parse avatar response'));
-        }
-      } else {
-        reject(new Error(`Upload failed: ${xhr.status}`));
-      }
-    };
-
-    xhr.onerror = () => reject(new Error('Network error during avatar upload'));
-    xhr.ontimeout = () => reject(new Error('Avatar upload timeout'));
-
-    xhr.send(formData);
-  });
+export async function searchUsersByLogin(login: string): Promise<IUser[]> {
+  const users = await http.post<Array<IUser & { id?: string | number }>>(
+    "user/search",
+    { login },
+  );
+  return users.map(normalizeUser);
 }

@@ -1,4 +1,6 @@
 import { Error404 } from "../pages/error-404/error-404";
+import { isAuthenticated } from "../models/auth.model";
+import { router } from "../core/Router";
 
 export class Error404Controller {
   private view: Error404 | null = null;
@@ -13,12 +15,7 @@ export class Error404Controller {
   }
 
   private handleBack(): void {
-    const token = localStorage.getItem("access_token");
-    if (token) {
-      window.location.hash = "/messenger";
-    } else {
-      window.location.hash = "/";
-    }
+    router.navigate(isAuthenticated() ? "/messenger" : "/");
   }
 
   public getView(): Error404 {

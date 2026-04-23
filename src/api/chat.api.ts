@@ -1,8 +1,6 @@
-import { HttpClient } from '../utils/http';
+import { HttpClient, WS_BASE_URL } from '../utils/http';
 
-const API_URL = 'https://ya-praktikum.tech/api/v2/';
-
-const http = new HttpClient(API_URL);
+const http = new HttpClient("chats");
 
 export interface IChat {
   id: number;
@@ -52,15 +50,15 @@ export interface ICreateChatResponse {
 }
 
 export async function getChats(): Promise<IChat[]> {
-  return http.get<IChat[]>('chats');
+  return http.get<IChat[]>('');
 }
 
 export async function createChat(data: ICreateChatRequest): Promise<ICreateChatResponse> {
-  return http.post<ICreateChatResponse>('chats', data);
+  return http.post<ICreateChatResponse>('', data);
 }
 
 export async function deleteChat(chatId: number): Promise<void> {
-  return http.delete<void>("chats", { chatId });
+  return http.delete<void>("", { chatId });
 }
 
 export interface IChatTokenResponse {
@@ -68,17 +66,17 @@ export interface IChatTokenResponse {
 }
 
 export async function getChatToken(chatId: number): Promise<IChatTokenResponse> {
-  return http.post<IChatTokenResponse>(`chats/token/${chatId}`);
+  return http.post<IChatTokenResponse>(`token/${chatId}`);
 }
 
-export const CHAT_WS_BASE_URL = "wss://ya-praktikum.tech/ws/chats";
+export const CHAT_WS_BASE_URL = `${WS_BASE_URL}chats`;
 
 export async function addUsersToChat(chatId: number, userIds: number[]): Promise<void> {
-  return http.put<void>(`chats/users`, { users: userIds, chatId });
+  return http.put<void>('users', { users: userIds, chatId });
 }
 
 export async function removeUsersFromChat(chatId: number, userIds: number[]): Promise<void> {
-  return http.delete<void>(`chats/users`, { users: userIds, chatId });
+  return http.delete<void>('users', { users: userIds, chatId });
 }
 
 export async function uploadChatAvatar(chatId: number, file: File): Promise<void> {
@@ -86,7 +84,7 @@ export async function uploadChatAvatar(chatId: number, file: File): Promise<void
   formData.append('avatar', file);
   formData.append('chatId', String(chatId));
 
-  await http.put<void>("chats/avatar", formData);
+  await http.put<void>("avatar", formData);
 }
 
 export interface IChatUserResponse {
@@ -99,5 +97,5 @@ export interface IChatUserResponse {
 }
 
 export async function getChatUsers(chatId: number): Promise<IChatUserResponse[]> {
-  return http.get<IChatUserResponse[]>(`chats/${chatId}/users`);
+  return http.get<IChatUserResponse[]>(`${chatId}/users`);
 }

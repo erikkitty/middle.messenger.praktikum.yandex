@@ -6,9 +6,7 @@ import {
   normalizeUser,
 } from '../types/domains';
 
-const API_URL = 'https://ya-praktikum.tech/api/v2/';
-
-const http = new HttpClient(API_URL);
+const http = new HttpClient("auth");
 
 interface ISignInResponseBody {
   user?: IUser & { id?: string | number };
@@ -25,11 +23,11 @@ export interface ISignUpResponse {
 }
 
 export async function signUp(data: IRegisterRequest): Promise<ISignUpResponse> {
-  return http.post<ISignUpResponse>('auth/signup', data);
+  return http.post<ISignUpResponse>('signup', data);
 }
 
 export async function signIn(data: ILoginRequest): Promise<IUser> {
-  const raw = await http.post<ISignInResponseBody | null>('auth/signin', data);
+  const raw = await http.post<ISignInResponseBody | null>('signin', data);
   if (raw?.user) {
     return normalizeUser(raw.user);
   }
@@ -37,10 +35,10 @@ export async function signIn(data: ILoginRequest): Promise<IUser> {
 }
 
 export async function signOut(): Promise<void> {
-  return http.post<void>('auth/logout');
+  return http.post<void>('logout');
 }
 
 export async function getUser(): Promise<IUser> {
-  const user = await http.get<IUser & { id?: string | number }>('auth/user');
+  const user = await http.get<IUser & { id?: string | number }>('user');
   return normalizeUser(user);
 }

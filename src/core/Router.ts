@@ -106,10 +106,6 @@ export class Router {
   }
 
   public start(): void {
-<<<<<<< HEAD
-    // Migrate legacy hash routes like `/#/sign-up` to history routes `/sign-up`.
-=======
->>>>>>> sprint_3
     if (window.location.hash.startsWith("#/")) {
       const legacy = window.location.hash.slice(1);
       window.history.replaceState(null, "", legacy);

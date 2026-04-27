@@ -1,9 +1,11 @@
 import { settingsModel } from "../models/settings.model";
+import { authModel } from "../models/auth.model";
 import { SettingsPage } from "../pages/settings-page/settings-page";
 import type {
   IChangePasswordRequest,
   IUpdateProfileRequest,
 } from "../types/domains";
+import { router } from "../core/Router";
 
 export class SettingsController {
   private view: SettingsPage | null = null;
@@ -15,12 +17,20 @@ export class SettingsController {
     this.view = new SettingsPage({
       ...user,
       onBack: () => {
-        window.location.hash = "/chat";
+        router.navigate("/messenger");
       },
-      onLogout: () => {
-        window.location.hash = "/";
-      },
+      onLogout: () => this.handleLogout(),
     });
+  }
+
+  private async handleLogout(): Promise<void> {
+    try {
+      await authModel.logout();
+      router.navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      router.navigate("/");
+    }
   }
 
   public async updateProfile(data: IUpdateProfileRequest): Promise<void> {
@@ -38,6 +48,13 @@ export class SettingsController {
 
   public async changePassword(data: IChangePasswordRequest): Promise<void> {
     await settingsModel.changePassword(data);
+  }
+
+  public async uploadAvatar(file: File): Promise<void> {
+    const user = await settingsModel.uploadAvatar(file);
+    this.view?.setProps({
+      avatar: user.avatar,
+    });
   }
 
   public getView(): SettingsPage {

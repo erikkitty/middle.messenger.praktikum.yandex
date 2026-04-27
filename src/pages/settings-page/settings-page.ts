@@ -7,7 +7,6 @@ import { collectStringValues, setFieldError, validateField } from "../../utils/v
 import { settingsController } from "../../controllers/settings.controller";
 import { initSettingsAvatar } from "./__avatar/settings-page__avatar";
 import { initSettingsModal } from "./__modal/settings-page__modal";
-import { updateView } from "./__user-info/settings-page__user-info";
 
 export interface SettingsPageProps extends IUser {
   onBack?: () => void;
@@ -98,7 +97,7 @@ export class SettingsPage extends Block<SettingsPageProps> {
         setFieldError(
           input,
           msg,
-          ".settings-change-data__row",
+          ".settings-change-data__field",
           ".settings-change-data__error",
         );
         return r.ok;
@@ -111,23 +110,19 @@ export class SettingsPage extends Block<SettingsPageProps> {
         const ok = inputs.every((i) => validateOne(i));
         const data = formDataToObject(changeDataForm);
         if (!ok) return;
-        const avatarImage = root.querySelector<HTMLImageElement>(".settings-avatar__image");
-        const avatar = avatarImage?.src || "";
-        await settingsController.updateProfile({
-          first_name: data.first_name,
-          second_name: data.second_name,
-          login: data.login,
-          email: data.email,
-          phone: data.phone,
-          display_name: data.display_name,
-          avatar: avatar || undefined,
-        });
-        updateView();
-        if (avatar) {
-          const avatarImageEl = root.querySelector<HTMLImageElement>(".settings-avatar__image");
-          if (avatarImageEl) avatarImageEl.src = avatar;
+        try {
+          await settingsController.updateProfile({
+            first_name: String(data.first_name ?? ""),
+            second_name: String(data.second_name ?? ""),
+            login: String(data.login ?? ""),
+            email: String(data.email ?? ""),
+            phone: String(data.phone ?? ""),
+            display_name: data.display_name ? String(data.display_name) : undefined,
+          });
+          setMode("profile");
+        } catch (error) {
+          alert(error instanceof Error ? error.message : "Failed to update profile");
         }
-        setMode("profile");
       });
     }
 
@@ -161,11 +156,15 @@ export class SettingsPage extends Block<SettingsPageProps> {
         if (!ok) return;
         const oldPassword = String(data.old_password ?? "");
         const newPassword = String(data.new_password ?? "");
-        await settingsController.changePassword({
-          oldPassword,
-          newPassword,
-        });
-        setMode("profile");
+        try {
+          await settingsController.changePassword({
+            oldPassword,
+            newPassword,
+          });
+          setMode("profile");
+        } catch (error) {
+          alert(error instanceof Error ? error.message : "Failed to change password");
+        }
       });
     }
 

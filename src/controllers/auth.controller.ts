@@ -1,6 +1,7 @@
 import { authModel } from '../models/auth.model';
 import { AuthForm } from '../pages/auth-form/auth-form';
 import { ILoginRequest } from '../types/domains';
+import { router } from "../core/Router";
 
 export class AuthController {
   private view: AuthForm | null = null;
@@ -18,7 +19,7 @@ export class AuthController {
   private async handleLogin(data: ILoginRequest): Promise<void> {
     try {
       await authModel.login(data);
-      window.location.hash = '/chat';
+      router.navigate('/messenger');
     } catch (error) {
       this.ensureView().setProps({ 
         error: error instanceof Error ? error.message : 'Ошибка входа'
@@ -27,7 +28,7 @@ export class AuthController {
   }
 
   private handleRegister(): void {
-    window.location.hash = '/register';
+    router.navigate('/sign-up');
   }
 
   public getView(): AuthForm {

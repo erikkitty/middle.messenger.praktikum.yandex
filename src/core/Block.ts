@@ -133,9 +133,14 @@ export class Block<P extends IBlockProps = object> {
   protected componentDidUpdate(_oldProps: P, _newProps: P): void {
     void _oldProps;
     void _newProps;
+    const previousElement = this.element;
+    const parent = previousElement?.parentElement ?? null;
     this.unmountComponent();
     this.render();
-    if (this._isMounted) {
+    if (this._isMounted && this.element) {
+      if (parent && previousElement) {
+        parent.replaceChild(this.element, previousElement);
+      }
       this.mountComponent();
     }
   }

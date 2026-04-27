@@ -1,6 +1,7 @@
 import { registerModel } from "../models/register.model";
 import { RegisterForm } from "../pages/register-form/register-form";
 import type { IRegisterRequest } from "../types/domains";
+import { router } from "../core/Router";
 
 export class RegisterController {
   private view: RegisterForm | null = null;
@@ -10,7 +11,7 @@ export class RegisterController {
       this.view = new RegisterForm({
         onSubmit: (data) => this.handleRegister(data),
         onLogin: () => {
-          window.location.hash = "/";
+          router.navigate("/");
         },
       });
     }
@@ -20,7 +21,7 @@ export class RegisterController {
   private async handleRegister(data: IRegisterRequest): Promise<void> {
     try {
       await registerModel.register(data);
-      window.location.hash = "/chat";
+      router.navigate("/messenger");
     } catch (error) {
       this.ensureView().setProps({
         error: error instanceof Error ? error.message : "Заполните поле",

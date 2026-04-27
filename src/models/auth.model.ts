@@ -1,41 +1,86 @@
 import type { ILoginRequest, IUser } from "../types/domains";
-import { mockUser } from "../pages/settings-page/mock-user";
+import { signIn, signOut, getUser } from "../api/auth.api";
+import { ApiError } from "../utils/http";
 
 const LS_USER_KEY = "app.user";
-const LS_PASSWORD_KEY = "app.password";
 
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+function saveUser(user: IUser): void {
+  localStorage.setItem(LS_USER_KEY, JSON.stringify(user));
 }
 
-function readUser(): IUser | null {
-  const raw = localStorage.getItem(LS_USER_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as IUser;
-  } catch {
-    return null;
-  }
+function removeUser(): void {
+  localStorage.removeItem(LS_USER_KEY);
+}
+
+export function isAuthenticated(): boolean {
+  return localStorage.getItem(LS_USER_KEY) !== null;
 }
 
 export class AuthModel {
   public async login(data: ILoginRequest): Promise<IUser> {
-    await delay(200);
-    const user = readUser();
-    const password = localStorage.getItem(LS_PASSWORD_KEY) ?? "";
+    try {
+      const user = await signIn(data);
+      saveUser(user);
+      return user;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        const reason =
+          error.data && typeof error.data === "object" && "reason" in error.data
+            ? String((error.data as { reason: string }).reason)
+            : "";
 
-    if (!user && data.login === mockUser.login && data.password === "12345678A") {
-      localStorage.setItem(LS_USER_KEY, JSON.stringify(mockUser));
-      localStorage.setItem(LS_PASSWORD_KEY, "12345678A");
-      return mockUser;
+        if (error.status === 400 && reason === "User already in system") {
+          const currentUser = await this.getCurrentUser();
+          if (currentUser) {
+            return currentUser;
+          }
+          throw new Error("Пользователь уже авторизован", { cause: error });
+        }
+
+        if (error.status === 401) {
+          throw new Error('Неверный логин или пароль', { cause: error });
+        }
+        if (reason) {
+          throw new Error(reason, { cause: error });
+        }
+      }
+      throw new Error('Ошибка входа в систему', { cause: error });
     }
+  }
 
-    if (!user) throw new Error("Такого пользователя не существует");
-    if (user.login !== data.login || password !== data.password) {
-      throw new Error("Такого пользователя не существует");
+  public async logout(): Promise<void> {
+    try {
+      await signOut();
+    } finally {
+      removeUser();
     }
+  }
 
-    return user;
+  public async getCurrentUser(): Promise<IUser | null> {
+    try {
+      const user = await getUser();
+      saveUser(user);
+      return user;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 401 || error.status === 403) {
+          removeUser();
+          return null;
+        }
+        if (error.status !== 0) {
+          removeUser();
+          return null;
+        }
+      }
+
+      const stored = localStorage.getItem(LS_USER_KEY);
+      if (!stored) return null;
+      try {
+        return JSON.parse(stored) as IUser;
+      } catch {
+        return null;
+      }
+    }
   }
 }
 

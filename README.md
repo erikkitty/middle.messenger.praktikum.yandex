@@ -27,7 +27,7 @@
 - **Husky** — pre-commit хуки
 - **ESLint** — линтинг кода
 - **Stylelint** — линтинг css
-
+- **XHR** —  API 
 # Запуск сервера разработки
 npm run dev
 

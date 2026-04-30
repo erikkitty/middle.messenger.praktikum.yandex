@@ -1,42 +1,43 @@
 import type { IRegisterRequest, IUser } from "../types/domains";
-
-const LS_USER_KEY = "app.user";
-const LS_PASSWORD_KEY = "app.password";
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function saveUser(user: IUser): void {
-  localStorage.setItem(LS_USER_KEY, JSON.stringify(user));
-}
-
-function savePassword(password: string): void {
-  localStorage.setItem(LS_PASSWORD_KEY, password);
-}
+import { signUp } from "../api/auth.api";
+import { authModel } from "./auth.model";
+import { ApiError } from "../utils/http";
 
 export class RegisterModel {
   public async register(data: IRegisterRequest): Promise<IUser> {
-    await delay(200);
+    return this.registerWithRecovery(data, true);
+  }
 
-    if (localStorage.getItem(LS_USER_KEY)) {
-      throw new Error("Пользователь уже зарегистрирован");
+  private async registerWithRecovery(
+    data: IRegisterRequest,
+    canRetryAfterLogout: boolean,
+  ): Promise<IUser> {
+    try {
+      await signUp(data);
+      const user = await authModel.getCurrentUser();
+      if (!user) {
+        throw new Error("Не удалось получить данные пользователя после регистрации");
+      }
+      return user;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        if (error.status === 409) {
+          throw new Error('Пользователь с таким логином уже существует', { cause: error });
+        }
+        if (error.status === 400 && error.data && typeof error.data === 'object' && 'reason' in error.data) {
+          const reason = String((error.data as { reason: string }).reason);
+          if (reason === "User already in system") {
+            if (canRetryAfterLogout) {
+              await authModel.logout();
+              return this.registerWithRecovery(data, false);
+            }
+            throw new Error("Пользователь уже авторизован", { cause: error });
+          }
+          throw new Error(reason, { cause: error });
+        }
+      }
+      throw new Error('Ошибка регистрации', { cause: error });
     }
-
-    const user: IUser = {
-      id: String(Date.now()),
-      first_name: data.first_name,
-      second_name: data.second_name,
-      display_name: `${data.first_name} ${data.second_name}`,
-      login: data.login,
-      email: data.email,
-      phone: data.phone,
-    };
-
-    saveUser(user);
-    savePassword(data.password);
-
-    return user;
   }
 }
 

@@ -85,6 +85,29 @@
     }
   }
 
+  .chat-content__participants {
+    align-items: center;
+    display: flex;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .chat-content__participants-label,
+  .chat-content__participants-empty {
+    color: #757575;
+    font-size: 12px;
+  }
+
+  .chat-content__participant {
+    background: #f0edf8;
+    border: 1px solid #ddd5f3;
+    border-radius: 999px;
+    color: #4b3f78;
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
   .chat-send {
     border-top: 1px solid #e0e0e0;
     display: flex;

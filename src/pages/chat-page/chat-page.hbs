@@ -14,6 +14,36 @@
   <main class="chat-main">
     <div class="chat-content">
       {{#if currentChatId}}
+        <div class="chat-content__toolbar">
+          <h2 class="chat-content__title">{{currentChatTitle}}</h2>
+          <button type="button" class="chat-content__btn" data-action="add-user">
+            Добавить пользователя
+          </button>
+          <button
+            type="button"
+            class="chat-content__btn"
+            data-action="remove-user"
+          >
+            Удалить пользователя
+          </button>
+          <button
+            type="button"
+            class="chat-content__btn chat-content__btn--danger"
+            data-action="delete-chat"
+          >
+            Удалить чат
+          </button>
+          <div class="chat-content__participants">
+            <span class="chat-content__participants-label">Участники:</span>
+            {{#if participants.length}}
+              {{#each participants}}
+                <span class="chat-content__participant">@{{login}}</span>
+              {{/each}}
+            {{else}}
+              <span class="chat-content__participants-empty">нет данных</span>
+            {{/if}}
+          </div>
+        </div>
         <div class="chat-messages">
           {{{messageComponents}}}
         </div>

@@ -7,6 +7,7 @@ import { chatController } from "./controllers/chat.controller";
 import { settingsController } from "./controllers/settings.controller";
 import { error404Controller } from "./controllers/error-404.controller";
 import { error500Controller } from "./controllers/error-500.controller";
+import { authModel } from "./models/auth.model";
 
 import chatHeaderHbs from "./pages/chat-page/__header/chat-page__header.hbs?raw";
 import chatSidebarSearchHbs from "./pages/chat-page/__sidebar/__search/chat-page__sidebar-search.hbs?raw";
@@ -99,26 +100,46 @@ router.addRoute("/", () => {
   mount(authController.getView());
 });
 
-router.addRoute("/register", () => {
+router.addRoute("/sign-up", () => {
   setLayout("auth");
   mount(registerController.getView());
 });
 
-router.addRoute("/chat", () => {
+router.addRoute("/messenger", () => {
   setLayout("chat");
-  chatController
-    .init()
-    .then(() => mount(chatController.getView()))
-    .catch(console.error);
-});
+
+  authModel
+    .getCurrentUser()
+    .then((user) => {
+      if (!user) {
+        router.replace("/");
+        return;
+      }
+      chatController
+        .init()
+        .then(() => mount(chatController.getView()))
+        .catch(console.error);
+    })
+    .catch(() => router.replace("/"));
+}, true);
 
 router.addRoute("/settings", () => {
   setLayout("settings");
-  settingsController
-    .init()
-    .then(() => mount(settingsController.getView()))
-    .catch(console.error);
-});
+
+  authModel
+    .getCurrentUser()
+    .then((user) => {
+      if (!user) {
+        router.replace("/");
+        return;
+      }
+      settingsController
+        .init()
+        .then(() => mount(settingsController.getView()))
+        .catch(console.error);
+    })
+    .catch(() => router.replace("/"));
+}, true);
 
 router.addRoute("/404", () => {
   setLayout("error");
@@ -136,6 +157,5 @@ router.addRoute("*", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!window.location.hash) window.location.hash = "/";
   router.start();
 });

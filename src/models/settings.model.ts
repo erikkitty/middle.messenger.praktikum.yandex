@@ -3,24 +3,10 @@ import type {
   IUpdateProfileRequest,
   IUser,
 } from "../types/domains";
-import { mockUser } from "../pages/settings-page/mock-user";
+import { updateProfile as updateProfileApi, changePassword as changePasswordApi, uploadAvatar } from "../api/user.api";
+import { authModel } from "./auth.model";
 
 const LS_USER_KEY = "app.user";
-const LS_PASSWORD_KEY = "app.password";
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function readUser(): IUser | null {
-  const raw = localStorage.getItem(LS_USER_KEY);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as IUser;
-  } catch {
-    return null;
-  }
-}
 
 function writeUser(user: IUser): void {
   localStorage.setItem(LS_USER_KEY, JSON.stringify(user));
@@ -28,46 +14,27 @@ function writeUser(user: IUser): void {
 
 export class SettingsModel {
   public async getUser(): Promise<IUser> {
-    await delay(150);
-    const existing = readUser();
-    if (existing) return existing;
-    const seeded: IUser = {
-      id: mockUser.id,
-      first_name: mockUser.first_name,
-      second_name: mockUser.second_name,
-      display_name: mockUser.display_name,
-      login: mockUser.login,
-      email: mockUser.email,
-      phone: mockUser.phone,
-      avatar: mockUser.avatar,
-    };
-    writeUser(seeded);
-    return seeded;
+    const user = await authModel.getCurrentUser();
+    if (!user) {
+      throw new Error("Пользователь не авторизован");
+    }
+    return user;
   }
 
   public async updateProfile(data: IUpdateProfileRequest): Promise<IUser> {
-    await delay(200);
-    const user = readUser();
-    if (!user) throw new Error("Пользователь не найден");
-
-    const next: IUser = {
-      ...user,
-      ...data,
-      display_name:
-        data.display_name ?? `${data.first_name} ${data.second_name}`,
-    };
-    writeUser(next);
-    Object.assign(mockUser, next);
-    return next;
+    const user = await updateProfileApi(data);
+    writeUser(user);
+    return user;
   }
 
   public async changePassword(data: IChangePasswordRequest): Promise<void> {
-    await delay(200);
-    const current = localStorage.getItem(LS_PASSWORD_KEY) ?? "";
-    if (current && current !== data.oldPassword) {
-      throw new Error("Старый пароль неверный");
-    }
-    localStorage.setItem(LS_PASSWORD_KEY, data.newPassword);
+    await changePasswordApi(data);
+  }
+
+  public async uploadAvatar(file: File): Promise<IUser> {
+    const user = await uploadAvatar(file);
+    writeUser(user);
+    return user;
   }
 }
 

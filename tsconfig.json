@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["jest", "node"],
     "target": "ES2022",
     "useDefineForClassFields": true,
     "module": "ESNext",
@@ -17,7 +18,8 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "esModuleInterop": true
   },
   "include": ["src"]
 }

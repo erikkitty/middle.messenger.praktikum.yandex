@@ -31,9 +31,12 @@
 # Запуск сервера разработки
 npm run dev
 
-# Сборка проекта и запуск сервера
+# Сборка проекта 
 npm run build
+# Запуск сервера
 npm run start
+# Запуск тестов
+npm run test
 
 # Проверка на стилистические и типовые ошибки
 npm run lint
@@ -42,4 +45,4 @@ npm run lint
 npm run preview
 
 # Pull Request
-https://github.com/erikkitty/middle.messenger.praktikum.yandex/pull/8
+https://github.com/erikkitty/middle.messenger.praktikum.yandex/pull/10

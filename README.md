@@ -42,4 +42,4 @@ npm run lint
 npm run preview
 
 # Pull Request
-https://github.com/erikkitty/middle.messenger.praktikum.yandex/pull/9
+https://github.com/erikkitty/middle.messenger.praktikum.yandex/pull/10

@@ -48,6 +48,10 @@ export class Router {
     this.authRoutes = routes;
   }
 
+  public clearRoutes(): void {
+    this.routes = [];
+  }
+
   public navigate(path: string): void {
     window.history.pushState(null, "", path);
     this.handleRoute();

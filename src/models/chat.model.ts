@@ -1,4 +1,4 @@
-import type { IChat, IChatMessage, IChatUser } from "../types/domains";
+﻿import type { IChat, IChatMessage, IChatUser } from "../types/domains";
 import {
   getChats as getChatsApi,
   createChat as createChatApi,
@@ -40,6 +40,7 @@ export class ChatModel {
   private messages: IChatMessage[] = [];
   private listeners = new Set<(messages: IChatMessage[]) => void>();
   private connectSeq = 0;
+  private pingTimer: ReturnType<typeof setInterval> | null = null;
 
   public async getChats(): Promise<IChat[]> {
     const apiChats = await getChatsApi();
@@ -60,6 +61,11 @@ export class ChatModel {
   }
 
   private closeSocket(): void {
+    if (this.pingTimer) {
+      clearInterval(this.pingTimer);
+      this.pingTimer = null;
+    }
+
     if (!this.socket) return;
     try {
       this.socket.close();
@@ -95,12 +101,12 @@ export class ChatModel {
 
     const currentUser = await authModel.getCurrentUser();
     if (!currentUser?.id) {
-      throw new Error("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ");
+      throw new Error("Р СџР С•Р В»РЎРЉР В·Р С•Р Р†Р В°РЎвЂљР ВµР В»РЎРЉ Р Р…Р Вµ Р В°Р Р†РЎвЂљР С•РЎР‚Р С‘Р В·Р С•Р Р†Р В°Р Р…");
     }
 
     const token = await getChatTokenApi(Number(chatId));
     if (!token?.token) {
-      throw new Error("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ С‚РѕРєРµРЅ С‡Р°С‚Р°");
+      throw new Error("Р СњР Вµ РЎС“Р Т‘Р В°Р В»Р С•РЎРѓРЎРЉ Р С—Р С•Р В»РЎС“РЎвЂЎР С‘РЎвЂљРЎРЉ РЎвЂљР С•Р С”Р ВµР Р… РЎвЂЎР В°РЎвЂљР В°");
     }
 
     const wsUrl = `${CHAT_WS_BASE_URL}/${currentUser.id}/${chatId}/${token.token}`;
@@ -109,22 +115,38 @@ export class ChatModel {
 
     const oldMessages = await new Promise<IChatMessage[]>((resolve, reject) => {
       let resolved = false;
+      const initTimeoutMs = 10000;
+      const initTimeout = setTimeout(() => {
+        if (resolved) return;
+        resolved = true;
+        cleanupAll();
+        reject(new Error("Превышено время ожидания подключения к чату"));
+      }, initTimeoutMs);
 
       const cleanupInit = () => {
         socket.removeEventListener("open", onOpen);
         socket.removeEventListener("error", onError);
+        socket.removeEventListener("close", onCloseBeforeInit);
       };
 
       const cleanupAll = () => {
         cleanupInit();
         socket.removeEventListener("message", onMessage);
+        clearTimeout(initTimeout);
       };
 
       const onError = () => {
         if (resolved) return;
         resolved = true;
         cleanupAll();
-        reject(new Error("РћС€РёР±РєР° WebSocket СЃРѕРµРґРёРЅРµРЅРёСЏ"));
+        reject(new Error("Ошибка WebSocket соединения"));
+      };
+
+      const onCloseBeforeInit = () => {
+        if (resolved) return;
+        resolved = true;
+        cleanupAll();
+        reject(new Error("WebSocket соединение было закрыто"));
       };
 
       const onOpen = () => {
@@ -133,6 +155,19 @@ export class ChatModel {
         } catch {
           // ignore
         }
+
+        if (this.pingTimer) {
+          clearInterval(this.pingTimer);
+        }
+
+        this.pingTimer = setInterval(() => {
+          if (socket.readyState !== WebSocket.OPEN) return;
+          try {
+            socket.send(JSON.stringify({ type: "ping" }));
+          } catch {
+            // ignore
+          }
+        }, 30000);
       };
 
       const onMessage = (event: MessageEvent) => {
@@ -152,6 +187,7 @@ export class ChatModel {
           if (!resolved) {
             resolved = true;
             cleanupInit();
+            clearTimeout(initTimeout);
             resolve(mapped);
             return;
           }
@@ -171,9 +207,18 @@ export class ChatModel {
         this.emit();
       };
 
+      const onClose = () => {
+        if (this.pingTimer) {
+          clearInterval(this.pingTimer);
+          this.pingTimer = null;
+        }
+      };
+
       socket.addEventListener("open", onOpen);
       socket.addEventListener("error", onError);
+      socket.addEventListener("close", onCloseBeforeInit);
       socket.addEventListener("message", onMessage);
+      socket.addEventListener("close", onClose);
     });
 
     if (seq !== this.connectSeq) return [];
@@ -186,7 +231,7 @@ export class ChatModel {
   public async send(text: string): Promise<void> {
     const socket = this.socket;
     if (!socket || socket.readyState !== WebSocket.OPEN) {
-      throw new Error("Р§Р°С‚ РЅРµ РїРѕРґРєР»СЋС‡РµРЅ");
+      throw new Error("Р В§Р В°РЎвЂљ Р Р…Р Вµ Р С—Р С•Р Т‘Р С”Р В»РЎР‹РЎвЂЎР ВµР Р…");
     }
 
     socket.send(JSON.stringify({ content: text, type: "message" }));
@@ -279,4 +324,6 @@ function toDomainMessage(
     time,
   };
 }
+
+
 
